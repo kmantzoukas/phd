@@ -22,7 +22,7 @@ Please use the table below to correctly fill in the command above.
 
 | Placeholder | value |
 | ------ | ------ |
-| `${username}` | Username to connect to the MySQL database |
-| `${password}` | Password to connect to the MySQL database |
-| `${dbhost}` | Hostname or IP address where the MySQL database |
+| `${username}` | Username of the user to connect to the MySQL database |
+| `${password}` | Password of the user to connect to the MySQL database |
+| `${dbhost}` | Hostname or IP address where the MySQL database is installed |
 | `${dbport}` | Port number where the MySQL database is listening for connections |
