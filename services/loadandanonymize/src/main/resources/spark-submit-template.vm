@@ -1,0 +1,10 @@
+#set( $eventCaptor = "/home/abfc149/toreador-demo/captors/Data" + $parameters.getSecurityProperty() + "EverestEventCaptors.jar=emitter=socket,host=10.207.1.103,port=10333,eventStype=TEXT" )
+#!/bin/bash \
+spark-submit \
+--name $appName \
+--class $appClass \
+--master $master \
+--conf "spark.driver.extraJavaOptions=-javaagent:$eventCaptor" \
+--conf "spark.executor.extraJavaOptions=-javaagent:$eventCaptor" \
+--deploy-mode client \
+$appJar $parameters.getInput() $parameters.getOutput()
