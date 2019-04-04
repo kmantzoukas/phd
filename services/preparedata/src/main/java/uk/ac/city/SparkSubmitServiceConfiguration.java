@@ -7,7 +7,7 @@ public class SparkSubmitServiceConfiguration {
 
     private String appName = "PrepareDataService";
 
-    private String appClass = "uk.ac.city.services.AnonymizeData";
+    private String appClass = "uk.ac.city.services.PrepareData";
 
     private String appJar = "/home/abfc149/preparedata_2.11-0.1-SNAPSHOT.jar";
 

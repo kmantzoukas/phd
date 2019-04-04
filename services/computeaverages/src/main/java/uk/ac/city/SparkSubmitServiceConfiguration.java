@@ -7,7 +7,7 @@ public class SparkSubmitServiceConfiguration {
 
     private String appName = "LoadAndAnonymizeService";
 
-    private String appClass = "uk.ac.city.services.AnonymizeData";
+    private String appClass = "uk.ac.city.services.ComputeAverage";
 
     private String appJar = "/home/abfc149/computeaverage_2.11-0.1-SNAPSHOT.jar";
 
