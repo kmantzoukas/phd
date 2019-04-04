@@ -65,10 +65,10 @@ public class LoadandanonymizeService implements CommandLineRunner{
 
       File executable = File.createTempFile("toreador-spark-submit@", ".sh");
 
-      FileUtils.writeStringToFile(executable, writer.toString()/*.replaceAll("\r\n", "\n")*/, "UTF-8");
-      Runtime runtime = Runtime.getRuntime();
-      runtime.exec(new String[]{"chmod","+x",executable.getCanonicalPath()});
-      Process p = runtime.exec(new String[]{"sh",executable.getCanonicalPath()});
+      FileUtils.writeStringToFile(executable, writer.toString().replaceAll("\r\n", "\n"), "UTF-8");
+      ProcessBuilder builder = new ProcessBuilder("sh",executable.getCanonicalPath());
+
+      Process p = builder.start();
 
       int result = p.waitFor();
 
