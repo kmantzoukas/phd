@@ -61,9 +61,15 @@ public class ComputeAveragesService implements CommandLineRunner{
 
       File executable = File.createTempFile("toreador-spark-submit@", ".sh");
 
-      log.info("----> " + executable.getCanonicalFile());
-
       FileUtils.writeStringToFile(executable, writer.toString().replaceAll("\r\n", "\n"), "UTF-8");
+      ProcessBuilder builder = new ProcessBuilder("sh",executable.getCanonicalPath());
+
+      Process p = builder.start();
+
+      int result = p.waitFor();
+
+      if(result == 0)
+          log.info("Spark script executed successfully.");
 
   }
 
