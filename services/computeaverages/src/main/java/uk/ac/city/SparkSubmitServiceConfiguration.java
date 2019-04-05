@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("spark")
 public class SparkSubmitServiceConfiguration {
 
-    private String appName = "LoadAndAnonymizeService";
+    private String appName = "ComputeAveragesService";
 
     private String appClass = "uk.ac.city.services.ComputeAverage";
 
