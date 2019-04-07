@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+   <changeSet author="costis (generated)" id="1504163990731-1">
+      <createTable tableName="assets">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="pid" type="INT"/>
+         <column name="name" type="VARCHAR(512)"/>
+         <column name="type" type="ENUM('OPERATION', 'INPUT', 'OUTPUT')"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-2">
+      <createTable tableName="assetsecuritypropertypairs">
+         <column name="aid" type="INT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="spid" type="INT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="rate" type="VARCHAR(512)"/>
+         <column name="timeunit" type="VARCHAR(45)"/>
+         <column name="assertion" type="TEXT"/>
+         <column name="type" type="ENUM('VALIDATION', 'MONITORING')"/>
+         <column name="platformMonitoringProperty" type="VARCHAR(45)"/>
+         <column name="deploymentMonitoringProperty" type="VARCHAR(45)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-3">
+      <createTable tableName="atomicservices">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="name" type="VARCHAR(45)"/>
+         <column name="cid" type="INT"/>
+         <column name="owl" type="BLOB"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-4">
+      <createTable tableName="compositeservices">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="pid" type="INT"/>
+         <column name="name" type="VARCHAR(45)"/>
+         <column name="owls" type="BLOB"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-5">
+      <createTable tableName="guardedactions">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="aid" type="INT"/>
+         <column name="spid" type="INT"/>
+         <column name="action"
+                 type="ENUM('NOTIFY', 'MODIFY', 'PENALTY', 'RENEGOTIATE', 'OTHER')"/>
+         <column name="penalty" type="INT"/>
+         <column name="guard" type="TEXT"/>
+         <column name="name" type="VARCHAR(45)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-6">
+      <createTable tableName="inputs">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="name" type="VARCHAR(45)"/>
+         <column name="oid" type="INT"/>
+         <column name="type" type="VARCHAR(45)"/>
+         <column name="assetId" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-7">
+      <createTable tableName="operations">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="aid" type="INT"/>
+         <column name="name" type="VARCHAR(45)"/>
+         <column name="inputmessage" type="VARCHAR(45)"/>
+         <column name="outputmessage" type="VARCHAR(45)"/>
+         <column name="assetId" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-8">
+      <createTable tableName="outputs">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="name" type="VARCHAR(45)"/>
+         <column name="type" type="VARCHAR(45)"/>
+         <column name="oid" type="INT"/>
+         <column name="assetId" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-9">
+      <createTable tableName="parametervalues">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="aid" type="INT"/>
+         <column name="spid" type="INT"/>
+         <column name="sloparametersId" type="INT"/>
+         <column name="value" type="VARCHAR(45)"/>
+         <column name="sloparameters_id" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-10">
+      <createTable tableName="projects">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="name" type="VARCHAR(45)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="model"
+                 remarks="Contents of the prism file that contains the prism model"
+                 type="BLOB"/>
+         <column name="properties"
+                 remarks="Properties file to be used in conjunction with the prism model"
+                 type="BLOB"/>
+         <column name="validationoutput" type="BLOB"/>
+         <column defaultValueComputed="CURRENT_TIMESTAMP"
+                 name="created"
+                 remarks="Date that the prism request was created"
+                 type="TIMESTAMP">
+            <constraints nullable="false"/>
+         </column>
+         <column defaultValue="CREATING"
+                 name="status"
+                 remarks="Status of the request. Possible values are CREATING,CREATED,PROCESSING and COMPLETED"
+                 type="ENUM('CREATING', 'CREATED', 'STARTED', 'PROCESSING', 'COMPLETED', 'ERROR')">
+            <constraints nullable="false"/>
+         </column>
+         <column name="userId"
+                 remarks="Referece to the user that initiated the creation of the request"
+                 type="INT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="propertycategorycatalog" type="ENUM('NIST', 'CSA')">
+            <constraints nullable="false"/>
+         </column>
+         <column name="wsagreement" type="BLOB"/>
+         <column name="monitoringoutput" type="BLOB"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-11">
+      <createTable tableName="securityproperties">
+         <column autoIncrement="true" name="id" type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="name" type="VARCHAR(45)"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-12">
+      <createTable tableName="sloparameters">
+         <column name="id" type="INT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="name" type="VARCHAR(45)"/>
+         <column name="slotid" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-13">
+      <createTable tableName="slotemplates">
+         <column name="id" type="INT">
+            <constraints nullable="false"/>
+         </column>
+         <column name="name" type="VARCHAR(45)"/>
+         <column name="xml" type="LONGTEXT"/>
+         <column name="spid" type="INT"/>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-14">
+      <createTable tableName="users">
+         <column autoIncrement="true"
+                 name="id"
+                 remarks="Unique id of the user"
+                 type="INT">
+            <constraints primaryKey="true"/>
+         </column>
+         <column name="name" remarks="First name of the user" type="VARCHAR(45)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="surname" remarks="Surname of the user" type="VARCHAR(45)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="username" type="VARCHAR(45)">
+            <constraints nullable="false"/>
+         </column>
+         <column name="password"
+                 remarks="Hashed version of the user's password"
+                 type="VARCHAR(45)">
+            <constraints nullable="false"/>
+         </column>
+      </createTable>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-15">
+      <addPrimaryKey columnNames="aid, spid"
+                     constraintName="PRIMARY"
+                     tableName="assetsecuritypropertypairs"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-16">
+      <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="sloparameters"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-17">
+      <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="slotemplates"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-18">
+      <createIndex indexName="FKb4onu8hdy6a5p3peis4qysj77" tableName="guardedactions">
+         <column name="aid"/>
+         <column name="spid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-19">
+      <createIndex indexName="FKihcgwi2vat5ke1l3q702q3qbk" tableName="parametervalues">
+         <column name="aid"/>
+         <column name="spid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-20">
+      <createIndex indexName="fk_assets_1_idx" tableName="assets">
+         <column name="pid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-21">
+      <createIndex indexName="fk_assets_securityproperties_2_idx"
+                   tableName="assetsecuritypropertypairs">
+         <column name="spid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-22">
+      <createIndex indexName="fk_atomicservices_1_idx" tableName="atomicservices">
+         <column name="cid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-23">
+      <createIndex indexName="fk_compositeservice_1_idx" tableName="compositeservices">
+         <column name="pid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-24">
+      <createIndex indexName="fk_guardedactions_1_idx" tableName="guardedactions">
+         <column name="aid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-25">
+      <createIndex indexName="fk_guardedactions_2_idx" tableName="guardedactions">
+         <column name="spid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-26">
+      <createIndex indexName="fk_inputs_1_idx" tableName="inputs">
+         <column name="oid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-27">
+      <createIndex indexName="fk_inputs_2_idx" tableName="inputs">
+         <column name="assetId"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-28">
+      <createIndex indexName="fk_operations_1_idx" tableName="operations">
+         <column name="aid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-29">
+      <createIndex indexName="fk_operations_2_idx" tableName="operations">
+         <column name="assetId"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-30">
+      <createIndex indexName="fk_outputs_1_idx" tableName="outputs">
+         <column name="oid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-31">
+      <createIndex indexName="fk_outputs_2_idx" tableName="outputs">
+         <column name="assetId"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-32">
+      <createIndex indexName="fk_parametervalues_1" tableName="parametervalues">
+         <column name="aid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-33">
+      <createIndex indexName="fk_parametervalues_2_idx" tableName="parametervalues">
+         <column name="spid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-34">
+      <createIndex indexName="fk_projects_idx" tableName="projects">
+         <column name="userId"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-35">
+      <createIndex indexName="fk_sloparameters_1_idx" tableName="sloparameters">
+         <column name="slotid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-36">
+      <createIndex indexName="fk_slotemplates_1_idx" tableName="slotemplates">
+         <column name="spid"/>
+      </createIndex>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-37">
+      <addForeignKeyConstraint baseColumnNames="pid"
+                               baseTableName="assets"
+                               constraintName="fk_assets_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="CASCADE"
+                               referencedColumnNames="id"
+                               referencedTableName="projects"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-38">
+      <addForeignKeyConstraint baseColumnNames="aid"
+                               baseTableName="assetsecuritypropertypairs"
+                               constraintName="fk_assetsecuritypropertypairs_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="assets"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-39">
+      <addForeignKeyConstraint baseColumnNames="spid"
+                               baseTableName="assetsecuritypropertypairs"
+                               constraintName="fk_assetsecuritypropertypairs_2"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="securityproperties"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-40">
+      <addForeignKeyConstraint baseColumnNames="cid"
+                               baseTableName="atomicservices"
+                               constraintName="fk_atomicservices_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="compositeservices"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-41">
+      <addForeignKeyConstraint baseColumnNames="pid"
+                               baseTableName="compositeservices"
+                               constraintName="fk_compositeservice_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="CASCADE"
+                               referencedColumnNames="id"
+                               referencedTableName="projects"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-42">
+      <addForeignKeyConstraint baseColumnNames="aid"
+                               baseTableName="guardedactions"
+                               constraintName="fk_guardedactions_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="aid"
+                               referencedTableName="assetsecuritypropertypairs"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-43">
+      <addForeignKeyConstraint baseColumnNames="spid"
+                               baseTableName="guardedactions"
+                               constraintName="fk_guardedactions_2"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="spid"
+                               referencedTableName="assetsecuritypropertypairs"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-44">
+      <addForeignKeyConstraint baseColumnNames="oid"
+                               baseTableName="inputs"
+                               constraintName="fk_inputs_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="operations"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-45">
+      <addForeignKeyConstraint baseColumnNames="assetId"
+                               baseTableName="inputs"
+                               constraintName="fk_inputs_2"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="assets"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-46">
+      <addForeignKeyConstraint baseColumnNames="aid"
+                               baseTableName="operations"
+                               constraintName="fk_operations_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="atomicservices"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-47">
+      <addForeignKeyConstraint baseColumnNames="assetId"
+                               baseTableName="operations"
+                               constraintName="fk_operations_2"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="assets"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-48">
+      <addForeignKeyConstraint baseColumnNames="oid"
+                               baseTableName="outputs"
+                               constraintName="fk_outputs_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="operations"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-49">
+      <addForeignKeyConstraint baseColumnNames="assetId"
+                               baseTableName="outputs"
+                               constraintName="fk_outputs_2"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="assets"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-50">
+      <addForeignKeyConstraint baseColumnNames="aid"
+                               baseTableName="parametervalues"
+                               constraintName="fk_parametervalues_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="aid"
+                               referencedTableName="assetsecuritypropertypairs"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-51">
+      <addForeignKeyConstraint baseColumnNames="spid"
+                               baseTableName="parametervalues"
+                               constraintName="fk_parametervalues_2"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="spid"
+                               referencedTableName="assetsecuritypropertypairs"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-52">
+      <addForeignKeyConstraint baseColumnNames="userId"
+                               baseTableName="projects"
+                               constraintName="fk_prism_requests"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="CASCADE"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="users"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-53">
+      <addForeignKeyConstraint baseColumnNames="slotid"
+                               baseTableName="sloparameters"
+                               constraintName="fk_sloparameters_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="slotemplates"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504163990731-54">
+      <addForeignKeyConstraint baseColumnNames="spid"
+                               baseTableName="slotemplates"
+                               constraintName="fk_slotemplates_1"
+                               deferrable="false"
+                               initiallyDeferred="false"
+                               onDelete="NO ACTION"
+                               onUpdate="NO ACTION"
+                               referencedColumnNames="id"
+                               referencedTableName="securityproperties"/>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-12">
+      <insert tableName="users">
+         <column name="id" valueNumeric="1"/>
+         <column name="name" value="Maria"/>
+         <column name="surname" value="Krotsiani"/>
+         <column name="username" value="mkrotsiani"/>
+         <column name="password" value="1234"/>
+      </insert>
+      <insert tableName="users">
+         <column name="id" valueNumeric="2"/>
+         <column name="name" value="George"/>
+         <column name="surname" value="Spanoudakis"/>
+         <column name="username" value="gspanoudakis"/>
+         <column name="password" value="1234"/>
+      </insert>
+      <insert tableName="users">
+         <column name="id" valueNumeric="3"/>
+         <column name="name" value="Ioannis"/>
+         <column name="surname" value="Basdekis"/>
+         <column name="username" value="ibasdekis"/>
+         <column name="password" value="1234"/>
+      </insert>
+      <insert tableName="users">
+         <column name="id" valueNumeric="4"/>
+         <column name="name" value="Christos"/>
+         <column name="surname" value="Kloukinas"/>
+         <column name="username" value="ckloukinas"/>
+         <column name="password" value="1234"/>
+      </insert>
+      <insert tableName="users">
+         <column name="id" valueNumeric="5"/>
+         <column name="name" value="Constantinos"/>
+         <column name="surname" value="Mantzoukas"/>
+         <column name="username" value="cmantzoukas"/>
+         <column name="password" value="1234"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-8">
+      <insert tableName="projects">
+         <column name="id" valueNumeric="1"/>
+         <column name="name" value="demo-1"/>
+         <column name="model" valueBlobFile="prism.model"/>
+         <column name="properties" valueBlobFile="demo-prism.properties"/>
+         <column name="validationoutput" valueBlobFile="validationoutput.txt" />
+         <column name="created" valueDate="2017-08-30 00:48:36.0"/>
+         <column name="status" value="COMPLETED"/>
+         <column name="userId" valueNumeric="3"/>
+         <column name="propertycategorycatalog" value="CSA"/>
+         <column name="wsagreement" valueBlobFile="wsagreement.xml"/>
+         <column name="monitoringoutput"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-9">
+      <insert tableName="securityproperties">
+         <column name="id" valueNumeric="1"/>
+         <column name="name" value="Availability"/>
+      </insert>
+      <insert tableName="securityproperties">
+         <column name="id" valueNumeric="2"/>
+         <column name="name" value="Integrity"/>
+      </insert>
+      <insert tableName="securityproperties">
+         <column name="id" valueNumeric="3"/>
+         <column name="name" value="Confidentiality"/>
+      </insert>
+   </changeSet>
+    <changeSet author="costis (generated)" id="1504164007782-1">
+      <insert tableName="assets">
+         <column name="id" valueNumeric="620"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name" value="service_DataCleaningService_operation_SparkClean"/>
+         <column name="type" value="OPERATION"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="621"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkClean_output_outputPath"/>
+         <column name="type" value="OUTPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="622"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkClean_input_inputDataPath"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="623"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkClean_input_stringPattern"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="624"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkClean_input_outputPath"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="625"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name" value="service_DataCleaningService_operation_SparkKmean"/>
+         <column name="type" value="OPERATION"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="626"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_output_outputPath"/>
+         <column name="type" value="OUTPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="627"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_input_seed"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="628"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_input_outputPath"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="629"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_input_inputPath"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="630"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_input_initMode"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="631"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_input_K"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="632"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_input_tol"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="633"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_input_initSteps"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+      <insert tableName="assets">
+         <column name="id" valueNumeric="634"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name"
+                 value="service_DataCleaningService_operation_SparkKmean_input_maxIterations"/>
+         <column name="type" value="INPUT"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-2">
+      <insert tableName="assetsecuritypropertypairs">
+         <column name="aid" valueNumeric="625"/>
+         <column name="spid" valueNumeric="1"/>
+         <column name="rate" value="&lt;asrt:Float value=&#34;0.45&#34;/&gt;"/>
+         <column name="timeunit" value="Days"/>
+         <column name="assertion"/>
+         <column name="type" value="VALIDATION"/>
+         <column name="platformMonitoringProperty"/>
+         <column name="deploymentMonitoringProperty"/>
+      </insert>
+      <insert tableName="assetsecuritypropertypairs">
+         <column name="aid" valueNumeric="633"/>
+         <column name="spid" valueNumeric="2"/>
+         <column name="rate" value="&lt;asrt:Float value=&#34;0.82&#34;/&gt;"/>
+         <column name="timeunit" value="Days"/>
+         <column name="assertion"/>
+         <column name="type" value="VALIDATION"/>
+         <column name="platformMonitoringProperty"/>
+         <column name="deploymentMonitoringProperty"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-4">
+      <insert tableName="compositeservices">
+         <column name="id" valueNumeric="107"/>
+         <column name="pid" valueNumeric="1"/>
+         <column name="name" value="DataCleaningService"/>
+         <column name="owls" value="[B@4a183d02"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-3">
+      <insert tableName="atomicservices">
+         <column name="id" valueNumeric="154"/>
+         <column name="name" value="SparkCleanService"/>
+         <column name="cid" valueNumeric="107"/>
+         <column name="owl" value="[B@6b7d1df8"/>
+      </insert>
+      <insert tableName="atomicservices">
+         <column name="id" valueNumeric="155"/>
+         <column name="name" value="SparkKmeanService"/>
+         <column name="cid" valueNumeric="107"/>
+         <column name="owl" value="[B@3044e9c7"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-6">
+      <insert tableName="operations">
+         <column name="id" valueNumeric="97"/>
+         <column name="aid" valueNumeric="154"/>
+         <column name="name" value="SparkClean"/>
+         <column name="inputmessage" value="SparkClean"/>
+         <column name="outputmessage" value="SparkCleanResponse"/>
+         <column name="assetId" valueNumeric="620"/>
+      </insert>
+      <insert tableName="operations">
+         <column name="id" valueNumeric="98"/>
+         <column name="aid" valueNumeric="155"/>
+         <column name="name" value="SparkKmean"/>
+         <column name="inputmessage" value="SparkKmean"/>
+         <column name="outputmessage" value="SparkKmeanResponse"/>
+         <column name="assetId" valueNumeric="625"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-5">
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="508"/>
+         <column name="name" value="inputDataPath"/>
+         <column name="oid" valueNumeric="97"/>
+         <column name="type" value="xsd:String"/>
+         <column name="assetId" valueNumeric="622"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="509"/>
+         <column name="name" value="stringPattern"/>
+         <column name="oid" valueNumeric="97"/>
+         <column name="type" value="xsd:String"/>
+         <column name="assetId" valueNumeric="623"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="510"/>
+         <column name="name" value="outputPath"/>
+         <column name="oid" valueNumeric="97"/>
+         <column name="type" value="xsd:String"/>
+         <column name="assetId" valueNumeric="624"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="511"/>
+         <column name="name" value="seed"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="type" value="xsd:Int"/>
+         <column name="assetId" valueNumeric="627"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="512"/>
+         <column name="name" value="outputPath"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="type" value="xsd:String"/>
+         <column name="assetId" valueNumeric="628"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="513"/>
+         <column name="name" value="inputPath"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="type" value="xsd:String"/>
+         <column name="assetId" valueNumeric="629"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="514"/>
+         <column name="name" value="initMode"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="type" value="xsd:String"/>
+         <column name="assetId" valueNumeric="630"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="515"/>
+         <column name="name" value="K"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="type" value="xsd:Int"/>
+         <column name="assetId" valueNumeric="631"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="516"/>
+         <column name="name" value="tol"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="type" value="xsd:double"/>
+         <column name="assetId" valueNumeric="632"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="517"/>
+         <column name="name" value="initSteps"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="type" value="xsd:String"/>
+         <column name="assetId" valueNumeric="633"/>
+      </insert>
+      <insert tableName="inputs">
+         <column name="id" valueNumeric="518"/>
+         <column name="name" value="maxIterations"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="type" value="xsd:Int"/>
+         <column name="assetId" valueNumeric="634"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-7">
+      <insert tableName="outputs">
+         <column name="id" valueNumeric="96"/>
+         <column name="name" value="outputPath"/>
+         <column name="type" value="xsd:String"/>
+         <column name="oid" valueNumeric="97"/>
+         <column name="assetId" valueNumeric="621"/>
+      </insert>
+      <insert tableName="outputs">
+         <column name="id" valueNumeric="97"/>
+         <column name="name" value="outputPath"/>
+         <column name="type" value="xsd:String"/>
+         <column name="oid" valueNumeric="98"/>
+         <column name="assetId" valueNumeric="626"/>
+      </insert>
+   </changeSet>
+    <changeSet author="costis (generated)" id="1504164007782-11">
+      <insert tableName="slotemplates">
+         <column name="id" valueNumeric="1"/>
+         <column name="name" value="SLO-2"/>
+         <column name="xml" value="&lt;xml&gt;this is a test 2&lt;/xml&gt;"/>
+         <column name="spid" valueNumeric="2"/>
+      </insert>
+      <insert tableName="slotemplates">
+         <column name="id" valueNumeric="2"/>
+         <column name="name" value="SLO-1"/>
+         <column name="xml" value="&lt;xml&gt;this is a test 1&lt;/xml&gt;"/>
+         <column name="spid" valueNumeric="2"/>
+      </insert>
+   </changeSet>
+   <changeSet author="costis (generated)" id="1504164007782-10">
+      <insert tableName="sloparameters">
+         <column name="id" valueNumeric="1"/>
+         <column name="name" value="X"/>
+         <column name="slotid" valueNumeric="1"/>
+      </insert>
+      <insert tableName="sloparameters">
+         <column name="id" valueNumeric="2"/>
+         <column name="name" value="Y"/>
+         <column name="slotid" valueNumeric="1"/>
+      </insert>
+      <insert tableName="sloparameters">
+         <column name="id" valueNumeric="3"/>
+         <column name="name" value="Z"/>
+         <column name="slotid" valueNumeric="2"/>
+      </insert>
+      <insert tableName="sloparameters">
+         <column name="id" valueNumeric="4"/>
+         <column name="name" value="W"/>
+         <column name="slotid" valueNumeric="2"/>
+      </insert>
+   </changeSet>
+</databaseChangeLog>

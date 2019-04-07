@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    targetNamespace="http://www.cumulus.org/certificate/model"
+    xmlns="http://www.cumulus.org/certificate/model"
+    elementFormDefault="unqualified" attributeFormDefault="unqualified"
+    
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:sch="http://www.ascc.net/xml/schematron"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+    jaxb:extensionBindingPrefixes="xjc"
+    jaxb:version="1.0"
+    >
+
+  <!--
+      <xs:import schemaLocation="LifeCycleModel.xsd"
+      namespace="http://www.cumulus.org/certificate/model/lifecycle"/>
+  -->
+  <xs:include schemaLocation="LifeCycleModel.xsd"/>
+
+  <!--
+      <xs:import schemaLocation="NewCommonPartsCM.xsd"
+      namespace="http://www.cumulus.org/certificate/model"/>
+  -->
+  <xs:include schemaLocation="NewCommonPartsCM.xsd"/>
+
+  <!--
+      xmlns:cm="http://www.cumulus.org/certificate/model"
+  -->
+
+  <xs:annotation>
+    <xs:appinfo>
+      <sch:title xmlns:sch="http://www.ascc.net/xml/schematron">Schematron validation</sch:title>
+      <sch:ns prefix="d" uri="http://www.cumulus.org/certificate/model" xmlns:sch="http://www.ascc.net/xml/schematron"/>
+    </xs:appinfo>
+    <xs:appinfo>
+    </xs:appinfo>
+  </xs:annotation>
+
+  <xs:element name="CertificationModel" type="CertificationModelType"/>
+
+  <xs:complexType name="CertificationModelType">
+    <xs:complexContent>
+      <xs:extension base="CommonCertificationModelType">
+        <xs:sequence>
+          <xs:element name="SecurityPropertyAssertions" type="AssertionsType"/>
+          <xs:element name="AssessmentScheme" type="AssessmentSchemeType"/>
+          <xs:element name="ValidityTests" type="xs:string"/>
+          <xs:element name="MonitoringConfigurations" type="MonitoringConfigurationsType"/>
+          <xs:element name="EvidenceAggregation" type="EvidenceAggregationType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="Assertion" type="AssertionType"/>
+
+  <xs:complexType name="AssertionsType">
+    <xs:sequence minOccurs="1">
+      <xs:element name="Assertion" type="AssertionType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AnomalyType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Assertion" type="AssertionType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AssertionType">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="InterfaceDeclr"
+                  type="InterfaceDeclrType"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="VariableDeclr" type="variableType"/>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="Guaranteed" type="AssertionFormulaType"
+                  />
+    </xs:sequence>
+    <xs:attribute name="ID" type="xs:ID" use="required"/>
+    <xs:attribute name="SecPropertyID" type="xs:IDREF"/>
+  </xs:complexType>
+  <xs:complexType name="AssertionFormulaType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="1" name="quantification"
+                  type="quantificationType"/>
+      <xs:element minOccurs="0" name="precondition" type="AssertionConditionType"/>
+      <xs:element name="postcondition" type="AssertionConditionType"/>
+    </xs:sequence>
+    <xs:attribute name="ID" type="xs:string" use="required"/>
+    <xs:attribute name="type" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="AssertionConditionType">
+    <xs:sequence>
+      <xs:element name="atomicCondition" type="AssertionAtomicConditionType"/>
+      <xs:element name="WrappedCondition" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="operator" type="logicalOperatorType"/>
+            <xs:choice>
+              <xs:element name="assertionCondition" type="AssertionConditionType"/>
+              <xs:element name="timeCondition" type="timeConditionType"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AssertionAtomicConditionType">
+    <xs:choice>
+      <xs:element name="eventCondition" type="eventConditionType"/>
+      <xs:element name="stateCondition" type="stateConditionType"/>
+      <xs:element name="relationalCondition" type="relationalConditionType"/>
+    </xs:choice>
+    <xs:attribute name="conditionID" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="stateConditionType">
+    <xs:choice>
+      <xs:element name="initiates" type="stateChangeType"/>
+      <xs:element name="terminates" type="stateChangeType"/>
+      <xs:element name="initially" type="initiallyType"/>
+      <xs:element name="holdsAt" type="holdsAtType"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="eventConditionType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="event" type="eventType"/>
+    </xs:sequence>
+    <xs:attribute default="false" name="negated" type="xs:boolean"/>
+    <xs:attribute default="false" name="unconstrained" type="xs:boolean"/>
+    <xs:attribute default="false" name="recordable" type="xs:boolean"/>
+    <xs:attribute default="false" name="abducible" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="eventType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="eventID" type="IDVariableType"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="correlatedEventID" type="IDVariableType"/>
+      <xs:choice maxOccurs="1" minOccurs="0">
+        <xs:element name="call" type="operationType"/>
+        <xs:element name="reply" type="operationType"/>
+        <xs:element name="execute" type="operationType"/>
+      </xs:choice>
+      <xs:element name="tVar" minOccurs="0">
+        <xs:complexType>
+          <xs:choice>
+            <xs:element name="timeVar" type="timeVariableType"/>
+            <xs:element name="timePeriod" type="TimePeriodType"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="fromTime" type="TimeExpression" minOccurs="0"/>
+      <xs:element name="toTime" type="TimeExpression" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TimePeriodType">
+    <xs:attribute name="period"/>
+    <xs:attribute name="unit"/>
+  </xs:complexType>
+
+  <xs:complexType name="timeVariableType">
+    <xs:sequence>
+      <xs:element name="varName" type="xs:string"/>
+      <xs:element fixed="TimeVariable" name="varType" type="xs:string"/>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TimeExpression">
+    <xs:sequence>
+      <xs:element name="time" type="timeVariableType"/>
+      <xs:element name="Expression" minOccurs="0">
+        <xs:complexType>
+          <xs:choice>
+            <xs:element name="plusTime" type="timeVariableType"/>
+            <xs:element name="minusTime" type="timeVariableType"/>
+            <xs:element name="plus" type="xs:decimal"/>
+            <xs:element name="minus" type="xs:decimal"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="expressionType">
+    <xs:sequence>
+      <xs:element name="varName" type="xs:string"/>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element name="varType" type="xs:string"/>
+          <xs:choice>
+            <xs:element name="value" type="xs:string"/>
+            <xs:element name="fields" type="fieldType"/>
+          </xs:choice>
+        </xs:sequence>
+        <xs:element name="array" type="arrayType"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute default="false" name="persistent" type="xs:boolean"/>
+    <xs:attribute default="true" name="forMatching" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="operationCallType">
+    <xs:sequence>
+      <xs:element name="execute" type="operationType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IDVariableType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="varName" type="xs:string"/>
+      <xs:element maxOccurs="1" minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute default="false" name="persistent" type="xs:boolean"/>
+    <xs:attribute default="true" name="forMatching" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="timeConditionType">
+    <xs:choice>
+      <xs:element name="timeEqualTo" type="TimeRelation"/>
+      <xs:element name="timeNotEqualTo" type="TimeRelation"/>
+      <xs:element name="timeLessThan" type="TimeRelation"/>
+      <xs:element name="timeGreaterThan" type="TimeRelation"/>
+      <xs:element name="timeLessThanEqualTo" type="TimeRelation"/>
+      <xs:element name="timeGreaterThanEqualTo" type="TimeRelation"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="TimeRelation">
+    <xs:sequence>
+      <xs:element name="timeVar1" type="TimeExpression"/>
+      <xs:element name="timeVar2" type="TimeExpression"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="relationalConditionType">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="equal" type="varRelationType"/>
+        <xs:element name="notEqualTo" type="varRelationType"/>
+        <xs:element name="lessThan" type="varRelationType"/>
+        <xs:element name="greaterThan" type="varRelationType"/>
+        <xs:element name="lessThanEqualTo" type="varRelationType"/>
+        <xs:element name="greaterThanEqualTo" type="varRelationType"/>
+      </xs:choice>
+      <xs:element name="timeVar" type="timeVariableType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="varRelationType">
+    <xs:sequence>
+      <xs:element name="operand1" type="operandType"/>
+      <xs:element name="operand2" type="operandType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="logicalOperatorType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="and|or"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="quantificationType">
+    <xs:sequence>
+      <xs:element name="quantifier">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:pattern value="forall|existential"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:choice>
+        <xs:element name="regularVariable" type="variableType"/>
+        <xs:element name="timeVariable" type="timeVariableType"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="holdsAtType">
+    <xs:sequence>
+      <xs:element name="state" type="stateType_EC"/>
+      <xs:element name="timeVar" type="timeVariableType"/>
+    </xs:sequence>
+    <xs:attribute default="false" name="negated" type="xs:boolean"/>
+  </xs:complexType>
+
+  <xs:complexType name="initiallyType">
+    <xs:sequence>
+      <xs:element name="state" type="stateType_EC"/>
+      <xs:element name="timeVar" type="timeVariableType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="stateChangeType">
+    <xs:sequence>
+      <xs:element name="event" type="eventType"/>
+      <xs:element name="state" type="stateType_EC"/>
+      <xs:element name="timeVar" type="timeVariableType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="stateType_EC">
+    <xs:sequence>
+      <xs:element name="argument" minOccurs="1" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:choice>
+            <xs:element name="variable" type="variableType"/>
+            <xs:element name="operationCall" type="functionType"/>
+            <xs:element name="constant" type="constantType_EC"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="operandType">
+    <xs:choice>
+      <xs:element name="variable" type="variableType"/>
+      <xs:element name="operationCall" type="functionType"/>
+      <xs:element name="expression" type="expressionType"/>
+      <xs:element name="eventSeriesExpression" type="SeriesExpressionType"/>
+      <xs:element name="constant" type="constantType_EC"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="SeriesExpressionType">
+    <xs:sequence>
+      <xs:element name="eventSeriesCondition" type="AssertionConditionType"/>
+      <xs:element name="computation" type="valueExpType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="valueExpType">
+    <xs:choice>
+      <xs:element name="execute" type="operationType"/>
+      <xs:element name="function" type="functionType"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="functionType">
+    <xs:sequence>
+      <!-- operation restricted to a standard operation (i.e., min, max, avg, median, mode, stdev, ...) -->
+      <xs:element name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="partner" type="xs:string"/>
+      <xs:element name="argument" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:choice>
+            <!-- variable restricted to one of those in the event expression -->
+            <xs:element name="eventSeriesVariable" type="variableType"/>
+            <xs:element name="variable" type="variableType"/>
+            <xs:element name="constant" type="constantType_EC"/>
+            <xs:element name="function" type="functionType"/>
+          </xs:choice>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="ID" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="AssessmentSchemeType">
+    <xs:sequence>
+
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="EvidenceSufficiencyCondition"
+                  type="EvidenceSufficiencyConditionType"/>
+      <!--
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="ExpirationCondition"
+          type="ExpirationConditionType"/>
+      -->
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Conflict" type="ConflictType"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Anomalies" type="AnomalyType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="EvidenceSufficiencyConditionType">
+    <xs:choice>
+      <xs:element name="ExpectedSystemOperationModel" type="StateTransitionModelType"/>
+      <!--
+          <xs:element name="MonitoringPeriodCondition" type="MonitoringPeriodConditionType"/>
+          <xs:element name="MonitoringEventsCondition" type="MonitoringEventsConditionType"/>
+      -->
+    </xs:choice>
+    <xs:attribute name="Id" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <!--
+      <xs:complexType name="ExpirationConditionType">
+      <xs:sequence>
+      <xs:choice>
+      <xs:element name="absoluteDate" type="xs:date"/>
+      <xs:element name="elapsedPeriod" type="ElapsedPeriodType"/>
+      </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="Id" type="xs:string"/>
+      </xs:complexType>
+  -->
+  <!--
+      <xs:complexType name="ElapsedPeriodType">
+      <xs:attribute name="period" type="xs:float"/>
+      <xs:attribute name="periodUnit" type="PeriodUnitType"/>
+      </xs:complexType>
+  -->
+  <!-- USE xs:positiveInteger OR xs:nonNegativeInteger INSTEAD OF xs:float -->
+
+  <!--
+      <xs:complexType name="MonitoringPeriodConditionType">
+      <xs:attribute name="id" type="xs:string" use="required"/>
+      <xs:attribute name="minMonitoredPeriod" type="xs:float"/>
+      <xs:attribute name="periodUnit" type="PeriodUnitType"/>
+      </xs:complexType>
+  -->
+  <xs:simpleType name="PeriodUnitType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="nanoseconds"/>
+      <xs:enumeration value="milliseconds"/>
+      <xs:enumeration value="seconds"/>
+      <xs:enumeration value="minutes"/>
+      <xs:enumeration value="hours"/>
+      <xs:enumeration value="days"/>
+      <xs:enumeration value="months"/>
+      <xs:enumeration value="years"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!--
+      <xs:complexType name="MonitoringEventsConditionType">
+      <xs:attribute name="eventsNo" type="xs:decimal" use="optional"/>
+      </xs:complexType>
+  -->
+
+  <xs:complexType name="ActionConditionType">
+    <xs:attribute name="id" type="xs:string" use="required"/>
+    <xs:attribute name="SizeOfEvidence" type="xs:string" use="required"/>
+    <xs:attribute name="TimeToNextAggregation" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="ConflictType">
+    <xs:attribute name="conflictId" type="xs:string"/>
+    <xs:attribute name="assertionId" type="xs:string"/>
+    <xs:attribute name="assessmentPeriod" type="xs:float"/>
+    <xs:attribute name="assessmentUnit">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="nanoseconds"/>
+          <xs:enumeration value="milliseconds"/>
+          <xs:enumeration value="seconds"/>
+          <xs:enumeration value="minutes"/>
+          <xs:enumeration value="hours"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="EvidenceAggregationType">
+    <xs:sequence>
+      <xs:element name="AggregatedResultsInfo">
+        <xs:complexType>
+          <xs:attribute name="Startdate" type="xs:date"/>
+          <xs:attribute name="Timestamp" type="xs:date"/>
+          <xs:attribute name="NumberOfEvents" type="xs:string"/>
+          <xs:attribute name="intervalsTime" type="xs:float"/>
+          <xs:attribute name="intervalUnit">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="nanoseconds"/>
+                <xs:enumeration value="milliseconds"/>
+                <xs:enumeration value="seconds"/>
+                <xs:enumeration value="minutes"/>
+                <xs:enumeration value="hours"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="EventSummary">
+        <xs:complexType>
+          <xs:attribute name="NumberOfViolations" type="xs:string" use="required"/>
+          <xs:attribute name="NumberOfSatisfactions" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AggregatedValue" type="xs:string"/>
+      <xs:element minOccurs="0" name="FunctionalAggregatorId">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Max"/>
+            <xs:enumeration value="Min"/>
+            <xs:enumeration value="Average"/>
+            <xs:enumeration value="Standard Deviation"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="IntermediateResults" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MonitoringConfigurationsType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="MonitoringConfiguration"
+                  type="IndividualMonitorConfigurationType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IndividualMonitorConfigurationType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="Component" type="ComponentType"/>
+    </xs:sequence>
+    <xs:attribute name="Id" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="ComponentType">
+    <xs:choice>
+      <xs:element name="Reasoner">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="EndPoint" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="AssertionId" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Sensor">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="EndPoint" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="EventInfo">
+              <xs:complexType>
+                <xs:attribute name="assertionId" type="xs:string"/>
+                <xs:attribute name="conditionId" type="xs:string"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="constantType_EC">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="fieldType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="1" name="field" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
