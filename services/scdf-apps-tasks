@@ -1,0 +1,5 @@
+app register --name LoadAndAnonymizeService --type task --uri file:/home/abfc149/phd/services/loadandanonymize/target/loadandanonymize-0.0.1-SNAPSHOT.jar
+app register --name PrepareDataService --type task --uri file:/home/abfc149/phd/services/preparedata/target/preparedata-0.0.1-SNAPSHOT.jar
+app register --name ComputeAveragesService --type task --uri file:/home/abfc149/phd/services/computeaverages/target/computeaverages-0.0.1-SNAPSHOT.jar
+app register --name composed-task-runner --type task --uri maven://org.springframework.cloud.task.app:composedtaskrunner-task:2.1.0.RELEASE
+task create lightsource --definition "LoadAndAnonymizeService --input=hdfs://10.207.1.102:54310/input/measurements-demo.txt --security-property=Privacy --output=hdfs://10.207.1.102:54310/output/output-1 && PrepareDataService --input=hdfs://10.207.1.102:54310/output/output-1 --security-property=Availability --output=hdfs://10.207.1.102:54310/output/output-2 && ComputeAveragesService --input=hdfs://10.207.1.102:54310/output/output-2 --security-property=Integrity --output=hdfs://10.207.1.102:54310/output/output-3"
