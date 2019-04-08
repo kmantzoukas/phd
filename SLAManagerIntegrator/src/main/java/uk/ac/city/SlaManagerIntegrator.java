@@ -1,4 +1,4 @@
-package uk.ac.city.SLAManagerIntegrator;
+package uk.ac.city;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -24,14 +24,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
-public class SlaManagerIntegratorApplication implements CommandLineRunner {
-
-    public static void main(String... args) {
-        SpringApplication.run(SlaManagerIntegratorApplication.class, args);
-    }
+public class SlaManagerIntegrator implements CommandLineRunner {
 
     @Autowired
     ApplicationContext context;
+
+    @Autowired
+    SCDFConfigurationProperties scdf;
+
+    @Autowired
+    RestTemplateProperties rest;
 
     @Bean("restTemplate")
     RestTemplate getRestTemplate() {
@@ -40,19 +42,17 @@ public class SlaManagerIntegratorApplication implements CommandLineRunner {
 
     @Bean("authRestTemplate")
     RestTemplate getAuthRestTemplate() {
-
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY,
-                new UsernamePasswordCredentials("ibasdekis", "t0reador"));
-        CloseableHttpClient client = HttpClientBuilder
-                .create()
-                .setDefaultCredentialsProvider(credentialsProvider)
-                .build();
-
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(rest.getUsername(), rest.getPassword()));
+        CloseableHttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(credentialsProvider).build();
         clientHttpRequestFactory.setHttpClient(client);
 
         return new RestTemplate(clientHttpRequestFactory);
+    }
+
+    public static void main(String... args) {
+        SpringApplication.run(SlaManagerIntegrator.class, args);
     }
 
 
@@ -74,21 +74,22 @@ public class SlaManagerIntegratorApplication implements CommandLineRunner {
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-        /*
-        Get all the tasks defined in Spring Cloud Dataflow
-         */
+            /*
+            Get all the tasks defined in Spring Cloud Dataflow
+             */
             ResponseEntity<String> response = ((RestTemplate) context.getBean("restTemplate"))
-                    .exchange("http://10.207.1.102:9393/tasks/definitions", HttpMethod.GET, new HttpEntity<String>(headers), String.class);
+                    .exchange(String.format("http://%s:%d%s", scdf.getHost(), scdf.getPort(), scdf.getTaskDefinitionUrl()), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
             JSONObject obj = new JSONObject(response.getBody());
-         /*
-         Extract the JSON definitions from the JSON response from the Spring Cloud Dataflow server
-         */
-         JSONArray taskDefinitions = obj
-            .getJSONObject("_embedded").getJSONArray("taskDefinitionResourceList");
+             /*
+             Extract the JSON definitions from the JSON response from the Spring Cloud Dataflow server
+             */
+             JSONArray taskDefinitions = obj
+                .getJSONObject("_embedded").getJSONArray("taskDefinitionResourceList");
 
-         ResponseEntity<String> result =
-            ((RestTemplate) context.getBean("authRestTemplate")).postForEntity("http://10.207.1.102:8180/toreador/rest/api/users/3/projects/scdf",
-                    new HttpEntity<String>(taskDefinitions.toString(),headers), String.class);
+             ResponseEntity<String> result =
+                ((RestTemplate) context.getBean("authRestTemplate"))
+                        .postForEntity(String.format("http://%s:%d%s", rest.getHost(), rest.getPort(), rest.getUrl()),
+                            new HttpEntity<String>(taskDefinitions.toString(),headers), String.class);
         }
     }
 }
