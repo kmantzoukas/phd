@@ -17,12 +17,12 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-public class HadoopRDDComputeInterceptor {
+public class RDDComputeInterceptor {
 
     private EmitterType type;
     private final Properties properties;
 
-    public HadoopRDDComputeInterceptor(EmitterType type, Properties properties){
+    public RDDComputeInterceptor(EmitterType type, Properties properties){
         this.type = type;
         this.properties = properties;
     }
