@@ -19,12 +19,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class ShuffledRDDComputeInterceptor {
+public class ShuffledRDDComputeDelegator {
 
     private final EmitterType type;
     private final Properties properties;
 
-    public ShuffledRDDComputeInterceptor(EmitterType type, Properties properties){
+    public ShuffledRDDComputeDelegator(EmitterType type, Properties properties){
         this.properties = properties;
         this.type = type;
     }

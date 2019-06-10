@@ -1,40 +1,19 @@
 package uk.ac.city.monitor.agent;
 
-/*
-Byte buddy imports
- */
-
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.implementation.MethodDelegation;
-
-/*
-Apache Log4j imports
- */
-
 import net.bytebuddy.implementation.bind.annotation.Morph;
 import org.apache.log4j.Logger;
-
-/*
-Standard Java SDK imports
- */
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.instrument.Instrumentation;
 import java.util.Properties;
-
-/*
-Agent's custom class imports
- */
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.interceptors.*;
 import uk.ac.city.monitor.utils.Morpher;
 
 import static net.bytebuddy.implementation.MethodDelegation.to;
 
-/*
-Main class that represents the java agent
- */
 public class DataIntegrityEverestEventCaptor {
 
     final static Logger logger = Logger.getLogger(DataIntegrityEverestEventCaptor.class);
@@ -56,13 +35,7 @@ public class DataIntegrityEverestEventCaptor {
         }
 
         new AgentBuilder.Default()
-            /*
-            Element matcher for class org.apache.spark.rdd.HadoopRDD
-            */
             .type(type -> type.getName().equals("org.apache.spark.rdd.HadoopRDD"))
-            /*
-            Intercept all calls on HadoopRDD.compute() method
-            */
             .transform((builder, typeDescription, classLoader, module) -> {
                 return builder
                         .serialVersionUid(1L)
@@ -71,28 +44,16 @@ public class DataIntegrityEverestEventCaptor {
                                 MethodDelegation
                                         .withDefaultConfiguration()
                                         .withBinders(Morph.Binder.install(Morpher.class))
-                                        .to(new HadoopRDDComputeInterceptor(type, properties)));
+                                        .to(new HadoopRDDComputeDelegator(type, properties)));
             })
-            /*
-            Element matcher for class org.apache.spark.rdd.MapPartitionsRDD
-            */
             .type(type -> type.getName().equals("org.apache.spark.rdd.MapPartitionsRDD"))
-            /*
-            Intercept all calls on MapPartitionsRDD.compute() method
-            */
             .transform((builder, typeDescription, classLoader, module) -> {
                 return builder
                     .serialVersionUid(1L)
                     .method(method -> method.getName().equals("compute"))
                     .intercept(to(new MapPartitionsRDDComputeInterceptor(type, properties)));
             })
-            /*
-            Element matcher for class org.apache.spark.rdd.MapPartitionsRDD
-            */
             .type(type -> type.getName().equals("org.apache.spark.api.python.PythonRDD"))
-                /*
-                Intercept all calls on MapPartitionsRDD.compute() method
-                */
                 .transform((builder, typeDescription, classLoader, module) -> {
                     return builder
                             .serialVersionUid(1L)
@@ -100,15 +61,9 @@ public class DataIntegrityEverestEventCaptor {
                             .intercept(MethodDelegation
                                     .withDefaultConfiguration()
                                     .withBinders(Morph.Binder.install(Morpher.class))
-                                    .to(new PythonRDDComputeInterceptor(type, properties)));
+                                    .to(new PythonRDDComputeDelegator(type, properties)));
                 })
-            /*
-            Element matcher for class org.apache.spark.rdd.ShuffledRDD
-            */
             .type(type -> type.getName().equals("org.apache.spark.rdd.ShuffledRDD"))
-            /*
-            Intercept all calls on ShuffledRDD.compute() method
-            */
             .transform((builder, typeDescription, classLoader, module) -> {
                 return builder
                     .serialVersionUid(1L)
@@ -117,38 +72,23 @@ public class DataIntegrityEverestEventCaptor {
                         MethodDelegation
                             .withDefaultConfiguration()
                             .withBinders(Morph.Binder.install(Morpher.class))
-                            .to(new ShuffledRDDComputeInterceptor(type, properties)));
+                            .to(new ShuffledRDDComputeDelegator(type, properties)));
             })
-            /*
-            Element matcher for class org.apache.spark.util.collection.ExternalSorter
-            */
             .type(type -> type.getName().equals("org.apache.spark.util.collection.ExternalSorter"))
-            /*
-            Intercept all calls on ExternalSorter.writePartitionedFile() method
-            */
             .transform((builder, typeDescription, classLoader, module) -> {
                 return builder
                     .serialVersionUid(1L)
                     .method(method -> method.getName().equals("writePartitionedFile"))
-                    .intercept(MethodDelegation.to(new ExternalSorterWritePartitionedFileInterceptor(type, properties)));
+                    .intercept(MethodDelegation.to(new ExternalSorterWritePartitionedFileDelegator(type, properties)));
             })
             .type(type -> type.getName().equals("org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter"))
-            /*
-            Intercept all calls on ExternalSorter.writePartitionedFile() method
-            */
             .transform((builder, typeDescription, classLoader, module) -> {
                 return builder
                     .serialVersionUid(1L)
                     .method(method -> method.getName().equals("writePartitionedFile"))
-                    .intercept(MethodDelegation.to(new BypassMergeSortShuffleWriterWritePartitionedFileInterceptor(type, properties)));
+                    .intercept(MethodDelegation.to(new BypassMergeSortShuffleWriterWritePartitionedFileDelegator(type, properties)));
             })
-            /*
-            Element matcher for class org.apache.spark.storage.ShuffleBlockFetcherIterator
-            */
             .type(type -> type.getName().equals("org.apache.spark.storage.ShuffleBlockFetcherIterator"))
-            /*
-            Intercept all calls on ShuffleBlockFetcherIterator.flatMap() method
-            */
             .transform((builder, typeDescription, classLoader, module) -> {
                 return builder
                     .serialVersionUid(1L)
@@ -156,15 +96,9 @@ public class DataIntegrityEverestEventCaptor {
                     .intercept(MethodDelegation
                         .withDefaultConfiguration()
                         .withBinders(Morph.Binder.install(Morpher.class))
-                        .to(new ShuffleBlockFetcherIteratorFlatMapInterceptor(type, properties)));
+                        .to(new ShuffleBlockFetcherIteratorFlatMapDelegator(type, properties)));
             })
-            /*
-            Element matcher for class org.apache.spark.SparkContext
-            */
             .type(type -> type.getName().equals("org.apache.spark.SparkContext"))
-            /*
-            Intercept all calls on SparkContext.runJob() method
-            */
             .transform((builder, typeDescription, classLoader, module) -> {
                 return builder
                     .serialVersionUid(1L)
@@ -172,11 +106,8 @@ public class DataIntegrityEverestEventCaptor {
                     .intercept(MethodDelegation
                         .withDefaultConfiguration()
                         .withBinders(Morph.Binder.install(Morpher.class))
-                        .to(new SparkContextRunJobInterceptor(type, properties)));
+                        .to(new SparkContextRunJobDelegator(type, properties)));
              })
-            /*
-            Install the Java agent
-             */
             .installOn(instrumentation);
 
             logger.info("Event captors has been successfully installed.");

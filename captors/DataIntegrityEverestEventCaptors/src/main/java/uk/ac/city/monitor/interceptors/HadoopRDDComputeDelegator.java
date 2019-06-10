@@ -11,7 +11,6 @@ import org.apache.spark.TaskContext;
 import org.apache.spark.rdd.RDD;
 import scala.Tuple2;
 import scala.collection.Iterator;
-import uk.ac.city.monitor.emitters.Emitter;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.enums.OperationType;
 import uk.ac.city.monitor.iterators.DataIntegrityMonitorableIterator;
@@ -21,12 +20,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class HadoopRDDComputeInterceptor {
+public class HadoopRDDComputeDelegator {
 
     private final EmitterType type;
     private final Properties properties;
 
-    public HadoopRDDComputeInterceptor(EmitterType type, Properties properties){
+    public HadoopRDDComputeDelegator(EmitterType type, Properties properties){
         this.type = type;
         this.properties = properties;
     }

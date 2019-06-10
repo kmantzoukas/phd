@@ -10,8 +10,6 @@ import org.apache.spark.TaskContext;
 import org.apache.spark.rdd.RDD;
 import scala.Function3;
 import scala.collection.Iterator;
-import uk.ac.city.monitor.emitters.Emitter;
-import uk.ac.city.monitor.emitters.EventEmitterFactory;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.enums.OperationType;
 import uk.ac.city.monitor.iterators.DataIntegrityMonitorableIterator;

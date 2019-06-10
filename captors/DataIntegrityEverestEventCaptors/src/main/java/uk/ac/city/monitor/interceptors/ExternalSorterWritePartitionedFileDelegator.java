@@ -32,12 +32,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class ExternalSorterWritePartitionedFileInterceptor {
+public class ExternalSorterWritePartitionedFileDelegator {
 
     private final EmitterType type;
     private final Properties properties;
 
-    public ExternalSorterWritePartitionedFileInterceptor(EmitterType type, Properties properties){
+    public ExternalSorterWritePartitionedFileDelegator(EmitterType type, Properties properties){
         this.type = type;
         this.properties = properties;
     }

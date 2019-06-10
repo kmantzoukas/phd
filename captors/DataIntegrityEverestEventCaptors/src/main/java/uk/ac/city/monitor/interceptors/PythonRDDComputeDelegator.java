@@ -21,12 +21,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
 
-public class PythonRDDComputeInterceptor {
+public class PythonRDDComputeDelegator {
 
     private final EmitterType type;
     private final Properties properties;
 
-    public PythonRDDComputeInterceptor(EmitterType type, Properties properties) {
+    public PythonRDDComputeDelegator(EmitterType type, Properties properties) {
         this.type = type;
         this.properties = properties;
     }

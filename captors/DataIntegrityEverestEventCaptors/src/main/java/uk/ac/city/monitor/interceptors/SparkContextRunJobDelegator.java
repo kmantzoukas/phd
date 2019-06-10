@@ -7,10 +7,8 @@ import net.bytebuddy.implementation.bind.annotation.This;
 import org.apache.spark.SparkEnv$;
 import org.apache.spark.TaskContext;
 import org.apache.spark.rdd.RDD;
-import scala.Function1;
 import scala.Function2;
 import scala.collection.Iterator;
-import scala.runtime.AbstractFunction1;
 import scala.runtime.AbstractFunction2;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.enums.OperationType;
@@ -22,14 +20,13 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Function;
 
-public class SparkContextRunJobInterceptor implements Serializable{
+public class SparkContextRunJobDelegator implements Serializable{
 
     private final EmitterType type;
     private final Properties properties;
 
-    public SparkContextRunJobInterceptor(EmitterType type, Properties properties){
+    public SparkContextRunJobDelegator(EmitterType type, Properties properties){
         this.type = type;
         this.properties = properties;
     }
@@ -45,11 +42,6 @@ public class SparkContextRunJobInterceptor implements Serializable{
         String applicationId = SparkEnv$.MODULE$.get().conf().get("spark.app.id");
         String applicationName = SparkEnv$.MODULE$.get().conf().get("spark.app.name");
 
-            /*
-            Custom Scala function that creates a data integrity monitorable iterator and passes it
-            along in the runJob() method to compute the hashes for the data that each iterator
-            reads during the execution of the action
-             */
         final class Func extends AbstractFunction2<TaskContext , Iterator, Object> implements Serializable {
 
             @Override

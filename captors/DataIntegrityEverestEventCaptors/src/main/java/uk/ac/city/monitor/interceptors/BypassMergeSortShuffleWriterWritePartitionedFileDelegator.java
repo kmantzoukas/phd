@@ -3,16 +3,13 @@ package uk.ac.city.monitor.interceptors;
 import com.google.common.io.Closeables;
 import net.bytebuddy.implementation.bind.annotation.Argument;
 import net.bytebuddy.implementation.bind.annotation.FieldValue;
-import net.bytebuddy.implementation.bind.annotation.Morph;
 import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import org.apache.commons.io.IOUtils;
 import org.apache.spark.SparkEnv$;
 import org.apache.spark.executor.ShuffleWriteMetrics;
 import org.apache.spark.storage.DiskBlockObjectWriter;
 import org.apache.spark.storage.FileSegment;
-import org.apache.spark.storage.ShuffleBlockId;
 import org.apache.spark.util.Utils;
-import org.apache.spark.util.collection.WritablePartitionedPairCollection;
 import org.slf4j.Logger;
 import uk.ac.city.monitor.emitters.Emitter;
 import uk.ac.city.monitor.emitters.EventEmitterFactory;
@@ -29,12 +26,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class BypassMergeSortShuffleWriterWritePartitionedFileInterceptor {
+public class BypassMergeSortShuffleWriterWritePartitionedFileDelegator {
 
     private final EmitterType type;
     private final Properties properties;
 
-    public BypassMergeSortShuffleWriterWritePartitionedFileInterceptor(EmitterType type, Properties properties){
+    public BypassMergeSortShuffleWriterWritePartitionedFileDelegator(EmitterType type, Properties properties){
         this.type = type;
         this.properties = properties;
     }
