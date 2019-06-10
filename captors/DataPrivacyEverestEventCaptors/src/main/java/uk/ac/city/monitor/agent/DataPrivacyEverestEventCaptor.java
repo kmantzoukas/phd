@@ -13,12 +13,12 @@ import net.bytebuddy.implementation.bind.annotation.Morph;
 import uk.ac.city.monitor.emitters.Emitter;
 import uk.ac.city.monitor.emitters.EventEmitterFactory;
 import uk.ac.city.monitor.enums.EmitterType;
-import uk.ac.city.monitor.interceptors.RDDComputeInterceptor;
+import uk.ac.city.monitor.interceptors.RDDComputeDelegator;
 import uk.ac.city.monitor.utils.Morpher;
 
-public class DataPrivacyAgent {
+public class DataPrivacyEverestEventCaptor {
 
-	final static Logger logger = Logger.getLogger(DataPrivacyAgent.class);
+	final static Logger logger = Logger.getLogger(DataPrivacyEverestEventCaptor.class);
     private static EmitterType type;
     private static Properties properties = new Properties();
 
@@ -117,7 +117,7 @@ public class DataPrivacyAgent {
                                     MethodDelegation
                                             .withDefaultConfiguration()
                                             .withBinders(Morph.Binder.install(Morpher.class))
-                                            .to(new RDDComputeInterceptor(type, properties)));
+                                            .to(new RDDComputeDelegator(type, properties)));
                 })
          .installOn(instrumentation);
 

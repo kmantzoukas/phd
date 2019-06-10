@@ -21,8 +21,6 @@ public class EventEmitterFactory {
             case SOCKET:
                 emitter = new SocketEmitter(props);
                 break;
-            case XMPP:
-                break;
             default:
                 emitter = new RabbitMQEmitter(props);
         }
