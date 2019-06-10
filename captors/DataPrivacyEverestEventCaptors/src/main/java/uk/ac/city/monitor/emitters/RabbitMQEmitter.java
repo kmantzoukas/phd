@@ -56,7 +56,9 @@ public class RabbitMQEmitter extends Emitter {
     @Override
     public void send(String event) {
         try {
-            channel.basicPublish(channelName, topic, null, event.getBytes());
+            if(event != null){
+                channel.basicPublish(channelName, topic, null, event.getBytes());
+            }
         } catch (IOException ioe) {
             logger.error(ioe);
         }

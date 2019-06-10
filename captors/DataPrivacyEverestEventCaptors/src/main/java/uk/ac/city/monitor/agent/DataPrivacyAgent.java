@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.Morph;
+import uk.ac.city.monitor.emitters.Emitter;
+import uk.ac.city.monitor.emitters.EventEmitterFactory;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.interceptors.RDDComputeInterceptor;
 import uk.ac.city.monitor.utils.Morpher;
@@ -21,6 +23,8 @@ public class DataPrivacyAgent {
     private static Properties properties = new Properties();
 
     public static void premain(String configuration, Instrumentation instrumentation) throws IOException {
+
+        long start = new Date().getTime();
 
         properties.load(new StringReader(configuration.replaceAll(",", "\n")));
         EmitterType emitterType = EmitterType.valueOf(properties.getProperty("emitter").toUpperCase());
@@ -96,22 +100,15 @@ public class DataPrivacyAgent {
         }
 
         new AgentBuilder.Default()
+            .type(type ->
+                coreRDDs.contains(type.getName()) ||
+                graphxRDDs.contains(type.getName()) ||
+                mlibRDDs.contains(type.getName()) ||
+                sqlRDDs.contains(type.getName()) ||
+                kafkaRDDs.contains(type.getName()) ||
+                streamingKafkaRDDs.contains(type.getName()) ||
+                streamingRDDs.contains(type.getName()))
 
-                /*
-               Element matcher for class org.apache.spark.rdd.HadoopRDD
-                */
-                .type(type ->
-                    coreRDDs.contains(type.getName()) ||
-                    graphxRDDs.contains(type.getName()) ||
-                    mlibRDDs.contains(type.getName()) ||
-                    sqlRDDs.contains(type.getName()) ||
-                    kafkaRDDs.contains(type.getName()) ||
-                    streamingKafkaRDDs.contains(type.getName()) ||
-                    streamingRDDs.contains(type.getName())
-                )
-                /*
-               Intercept all calls on HadoopRDD.compute() method
-                */
                 .transform((builder, typeDescription, classLoader, module) -> {
                     return builder
                             .serialVersionUid(1L)
@@ -122,8 +119,13 @@ public class DataPrivacyAgent {
                                             .withBinders(Morph.Binder.install(Morpher.class))
                                             .to(new RDDComputeInterceptor(type, properties)));
                 })
-                .installOn(instrumentation);
+         .installOn(instrumentation);
 
-            logger.info("Event captors has been successfully installed.");
+        Emitter emitter = EventEmitterFactory.getInstance(emitterType, properties);
+        emitter.connect();
+        long end = new Date().getTime();
+        emitter.send(String.valueOf(end-start));
+
+        logger.info("Event captors has been successfully installed.");
     }
 }
