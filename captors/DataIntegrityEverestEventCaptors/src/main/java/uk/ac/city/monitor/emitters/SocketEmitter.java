@@ -53,9 +53,11 @@ public class SocketEmitter extends Emitter {
     @Override
     public void send(String event) {
         try {
-            writer.write(event);
-            writer.newLine();
-            writer.flush();
+            if(event != null){
+                writer.write(event);
+                writer.newLine();
+                writer.flush();
+            }
         } catch (IOException ioe) {
             logger.error(ioe);
         }

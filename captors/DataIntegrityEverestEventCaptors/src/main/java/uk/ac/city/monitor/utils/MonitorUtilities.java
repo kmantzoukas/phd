@@ -173,7 +173,7 @@ public class MonitorUtilities {
 
         if("TEXT".equalsIgnoreCase(style)){
             event =  String.format("%s(%s)", type.name().toLowerCase(), parameters);
-        }else if("XML".equalsIgnoreCase(style)){
+        }if("XML".equalsIgnoreCase(style)){
             event = createEventXML(operationId, type, arguments);
         }
 
