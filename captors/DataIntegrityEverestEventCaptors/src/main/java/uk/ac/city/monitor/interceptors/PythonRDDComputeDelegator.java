@@ -7,19 +7,14 @@ import org.apache.spark.TaskContext;
 import org.apache.spark.api.python.PythonFunction;
 import org.apache.spark.api.python.PythonRunner;
 import org.apache.spark.rdd.RDD;
-import scala.Function3;
-import scala.Tuple2;
 import scala.collection.Iterator;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.enums.OperationType;
 import uk.ac.city.monitor.iterators.DataIntegrityMonitorableIterator;
-import uk.ac.city.monitor.utils.Morpher;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Function;
 
 public class PythonRDDComputeDelegator {
 

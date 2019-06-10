@@ -16,7 +16,6 @@ import uk.ac.city.monitor.emitters.EventEmitterFactory;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.enums.OperationType;
 import uk.ac.city.monitor.utils.MonitorUtilities;
-import uk.ac.city.monitor.utils.Morpher;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.*;

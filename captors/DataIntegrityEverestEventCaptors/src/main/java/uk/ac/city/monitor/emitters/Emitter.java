@@ -1,6 +1,5 @@
 package uk.ac.city.monitor.emitters;
 
-import java.io.InputStream;
 import java.util.Properties;
 
 public abstract class Emitter {

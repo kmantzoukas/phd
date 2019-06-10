@@ -12,7 +12,6 @@ import uk.ac.city.monitor.utils.MonitorUtilities;
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 

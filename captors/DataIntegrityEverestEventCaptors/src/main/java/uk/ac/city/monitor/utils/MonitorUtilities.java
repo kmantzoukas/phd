@@ -87,11 +87,6 @@ public class MonitorUtilities {
             interactionEvent.setOperationName(type.name().toLowerCase());
             interactionEvent.setOperationID(operationId);
 
-            /*
-            If it's a read operation - either READRDD or READSHUFFLE - the status needs to be REQ-A. Alternatively, if
-            it's a write operation - either WRITERDD or WRITESHUFFLE - the status needs to be RES-B. This is done to
-            satisfy EVEREST's idiosyncrasy with respect to event statuses
-             */
             if(type == OperationType.READRDD || type == OperationType.READSHUFFLE){
                 interactionEvent.setStatus("REQ-A");
             }else if(type == OperationType.WRITERDD || type == OperationType.WRITESHUFFLE){
