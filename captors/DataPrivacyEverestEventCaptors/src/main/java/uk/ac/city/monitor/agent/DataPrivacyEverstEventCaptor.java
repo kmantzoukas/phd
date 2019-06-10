@@ -10,21 +10,17 @@ import org.apache.log4j.Logger;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.Morph;
-import uk.ac.city.monitor.emitters.Emitter;
-import uk.ac.city.monitor.emitters.EventEmitterFactory;
 import uk.ac.city.monitor.enums.EmitterType;
-import uk.ac.city.monitor.interceptors.RDDComputeInterceptor;
+import uk.ac.city.monitor.interceptors.RDDComputeDelegator;
 import uk.ac.city.monitor.utils.Morpher;
 
-public class DataPrivacyAgent {
+public class DataPrivacyEverstEventCaptor {
 
-	final static Logger logger = Logger.getLogger(DataPrivacyAgent.class);
+	final static Logger logger = Logger.getLogger(DataPrivacyEverstEventCaptor.class);
     private static EmitterType type;
     private static Properties properties = new Properties();
 
     public static void premain(String configuration, Instrumentation instrumentation) throws IOException {
-
-        long start = new Date().getTime();
 
         properties.load(new StringReader(configuration.replaceAll(",", "\n")));
         EmitterType emitterType = EmitterType.valueOf(properties.getProperty("emitter").toUpperCase());
@@ -117,14 +113,9 @@ public class DataPrivacyAgent {
                                     MethodDelegation
                                             .withDefaultConfiguration()
                                             .withBinders(Morph.Binder.install(Morpher.class))
-                                            .to(new RDDComputeInterceptor(type, properties)));
+                                            .to(new RDDComputeDelegator(type, properties)));
                 })
          .installOn(instrumentation);
-
-        Emitter emitter = EventEmitterFactory.getInstance(emitterType, properties);
-        emitter.connect();
-        long end = new Date().getTime();
-        emitter.send(String.valueOf(end-start));
 
         logger.info("Event captors has been successfully installed.");
     }
