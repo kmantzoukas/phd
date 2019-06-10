@@ -7,7 +7,11 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.instrument.Instrumentation;
+import java.util.Date;
 import java.util.Properties;
+
+import uk.ac.city.monitor.emitters.Emitter;
+import uk.ac.city.monitor.emitters.EventEmitterFactory;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.interceptors.*;
 import uk.ac.city.monitor.utils.Morpher;
@@ -21,6 +25,8 @@ public class DataIntegrityEverestEventCaptor {
     private static Properties properties = new Properties();
 
     public static void premain(String configuration, Instrumentation instrumentation) throws IOException {
+
+        long start = new Date().getTime();
 
         properties.load(new StringReader(configuration.replaceAll(",", "\n")));
         EmitterType emitterType = EmitterType.valueOf(properties.getProperty("emitter").toUpperCase());
@@ -110,6 +116,11 @@ public class DataIntegrityEverestEventCaptor {
              })
             .installOn(instrumentation);
 
-            logger.info("Event captors has been successfully installed.");
+        Emitter emitter = EventEmitterFactory.getInstance(emitterType, properties);
+        emitter.connect();
+        long end = new Date().getTime();
+        emitter.send(String.valueOf(end-start));
+
+        logger.info("Event captors has been successfully installed.");
     }
 }
