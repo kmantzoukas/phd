@@ -19,8 +19,8 @@ public class EventCaptor {
 
         ExecutorService pool = Executors.newFixedThreadPool(NUM_OF_THREADS);
 
-        port = !args[0].isEmpty() ? Integer.valueOf(args[0]) : 10333;
-        resultPath = !args[1].isEmpty() ? args[1] : null;
+        port = (args.length > 0) ? Integer.valueOf(args[0]) : 10333;
+        resultPath = (args.length > 0) ? args[1] : null;
 
         ServerSocket listener = new ServerSocket(port);
         System.out.println("Event captor started listening on port " + port);
