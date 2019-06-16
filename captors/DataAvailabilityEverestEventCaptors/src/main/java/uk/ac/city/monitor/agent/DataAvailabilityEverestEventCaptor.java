@@ -28,8 +28,6 @@ public class DataAvailabilityEverestEventCaptor implements Serializable {
 
     public static void premain(String configuration, Instrumentation instrumentation) throws IOException {
 
-        long start = new Date().getTime();
-
         properties.load(new StringReader(configuration.replaceAll(",", "\n")));
         EmitterType emitterType = EmitterType.valueOf(properties.getProperty("emitter").toUpperCase());
 
@@ -54,11 +52,6 @@ public class DataAvailabilityEverestEventCaptor implements Serializable {
                                     .to(SparkContextRunJobInterceptor.class));
                 })
                 .installOn(instrumentation);
-
-        Emitter emitter = EventEmitterFactory.getInstance(emitterType, properties);
-        emitter.connect();
-        long end = new Date().getTime();
-        emitter.send(String.valueOf(end-start));
 
         logger.info("Event captors has been successfully installed.");
 
