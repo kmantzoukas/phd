@@ -13,16 +13,11 @@ import uk.ac.city.monitor.enums.OperationType;
 import uk.ac.city.monitor.utils.MonitoringUtilities;
 import uk.ac.city.monitor.utils.Morpher;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import java.io.*;
 import java.lang.instrument.Instrumentation;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DataAvailabilityEverestEventCaptor implements Serializable {
