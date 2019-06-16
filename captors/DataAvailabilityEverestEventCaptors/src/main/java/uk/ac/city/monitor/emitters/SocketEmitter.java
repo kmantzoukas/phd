@@ -29,8 +29,8 @@ public class SocketEmitter extends Emitter {
         try {
             this.socket = new Socket(host,port);
             this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioe) {
+            logger.info(ioe);
         }
 
     }
@@ -53,9 +53,11 @@ public class SocketEmitter extends Emitter {
     @Override
     public void send(String event) {
         try {
-            writer.write(event);
-            writer.newLine();
-            writer.flush();
+            if(event != null){
+                writer.write(event);
+                writer.newLine();
+                writer.flush();
+            }
         } catch (IOException ioe) {
             logger.error(ioe);
         }
