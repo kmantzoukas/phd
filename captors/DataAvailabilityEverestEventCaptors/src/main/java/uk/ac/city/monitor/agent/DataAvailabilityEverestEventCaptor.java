@@ -13,16 +13,11 @@ import uk.ac.city.monitor.enums.OperationType;
 import uk.ac.city.monitor.utils.MonitoringUtilities;
 import uk.ac.city.monitor.utils.Morpher;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import java.io.*;
 import java.lang.instrument.Instrumentation;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DataAvailabilityEverestEventCaptor implements Serializable {
@@ -32,6 +27,8 @@ public class DataAvailabilityEverestEventCaptor implements Serializable {
     private static Properties properties = new Properties();
 
     public static void premain(String configuration, Instrumentation instrumentation) throws IOException {
+
+        long start = new Date().getTime();
 
         properties.load(new StringReader(configuration.replaceAll(",", "\n")));
         EmitterType emitterType = EmitterType.valueOf(properties.getProperty("emitter").toUpperCase());
@@ -57,6 +54,11 @@ public class DataAvailabilityEverestEventCaptor implements Serializable {
                                     .to(SparkContextRunJobInterceptor.class));
                 })
                 .installOn(instrumentation);
+
+        Emitter emitter = EventEmitterFactory.getInstance(emitterType, properties);
+        emitter.connect();
+        long end = new Date().getTime();
+        emitter.send(String.valueOf(end-start));
 
         logger.info("Event captors has been successfully installed.");
 
