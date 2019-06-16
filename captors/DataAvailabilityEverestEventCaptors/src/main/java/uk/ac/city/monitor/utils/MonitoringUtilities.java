@@ -1,9 +1,11 @@
 package uk.ac.city.monitor.utils;
 
 import org.apache.commons.math3.random.RandomDataGenerator;
+import org.apache.log4j.Logger;
 import org.apache.spark.Partition;
 import org.apache.spark.rdd.RDD;
 import org.slaatsoi.eventschema.*;
+import uk.ac.city.monitor.agent.DataAvailabilityEverestEventCaptor;
 import uk.ac.city.monitor.enums.DirectionType;
 import uk.ac.city.monitor.enums.OperationType;
 
@@ -19,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MonitoringUtilities {
+
+    final static Logger logger = Logger.getLogger(MonitoringUtilities.class);
 
     /*
     Create an XML representation of the event to be emitted. A series of parameters are passed as arguments based in the security property
@@ -221,7 +225,7 @@ public class MonitoringUtilities {
         String event = null;
 
         if("TEXT".equalsIgnoreCase(style)){
-            event =  String.format("%s(%s, %s, %s)", type.name().toLowerCase(), applicationId, applicationName, System.currentTimeMillis());
+            event =  String.format("%s(%s, %s, %s)", operationName, applicationId, applicationName, System.currentTimeMillis());
         }if("XML".equalsIgnoreCase(style)){
             event = MonitoringUtilities.createEventXML(type, operationName, applicationId, applicationName, rdd, split);
         }

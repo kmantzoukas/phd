@@ -79,9 +79,6 @@ public class DataAvailabilityEverestEventCaptor implements Serializable {
 
             String applicationId = SparkEnv$.MODULE$.get().conf().get("spark.app.id");
             String applicationName = SparkEnv$.MODULE$.get().conf().get("spark.app.name");
-             /*
-            Operation ids for the start and end events should be same for EVEREST to be able to perform the unification of the rules
-             */
 
             Emitter emitter = EventEmitterFactory.getInstance(type, properties);
             emitter.connect();
