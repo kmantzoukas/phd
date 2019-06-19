@@ -1,5 +1,5 @@
 #!/bin/bash
-for i in {1..100}
+for i in {1..1000}
 do
 spark-submit \
 --master spark://10.207.1.102:7077 \
