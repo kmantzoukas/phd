@@ -80,7 +80,12 @@ public class ExternalSorterWritePartitionedFileDelegator {
                                     Some.apply(keyComparator) :
                                     Option.empty());
 
+
             MessageDigest md = MessageDigest.getInstance("MD5");
+
+            if(properties.getProperty("algorithm")!= null){
+                md = MessageDigest.getInstance(properties.getProperty("algorithm"));
+            }
 
             while(sortedIterator.hasNext()){
 

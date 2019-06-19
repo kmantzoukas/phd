@@ -10,6 +10,8 @@ import org.apache.spark.rdd.RDD;
 import scala.Function2;
 import scala.collection.Iterator;
 import scala.runtime.AbstractFunction2;
+import uk.ac.city.monitor.emitters.Emitter;
+import uk.ac.city.monitor.emitters.EventEmitterFactory;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.enums.OperationType;
 import uk.ac.city.monitor.iterators.DataIntegrityMonitorableIterator;
@@ -17,6 +19,7 @@ import uk.ac.city.monitor.utils.Morpher;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -39,6 +42,15 @@ public class SparkContextRunJobDelegator implements Serializable{
             @Morph Morpher<Object> morpher,
             @This Object sc) throws IOException {
 
+        Properties props = new Properties();
+        props.put("host","10.207.1.103");
+        props.put("port","10334");
+
+        Emitter emitter = EventEmitterFactory.getInstance(EmitterType.SOCKET, props);
+        emitter.connect();
+
+        long start = new Date().getTime();
+
         String applicationId = SparkEnv$.MODULE$.get().conf().get("spark.app.id");
         String applicationName = SparkEnv$.MODULE$.get().conf().get("spark.app.name");
 
@@ -57,6 +69,13 @@ public class SparkContextRunJobDelegator implements Serializable{
             }
 
         }
-        return morpher.invoke(rdd, new Func(), classTag);
+
+        Object result = morpher.invoke(rdd, new Func(), classTag);
+        long end = new Date().getTime();
+
+        emitter.send(String.valueOf(end - start));
+        emitter.close();
+
+        return result;
     }
 }

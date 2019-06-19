@@ -43,7 +43,11 @@ public class DataIntegrityMonitorableIterator<A> extends AbstractIterator<A> {
 
 
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            md = MessageDigest.getInstance("MD5");
+
+            if(properties.getProperty("algorithm")!= null){
+                md = MessageDigest.getInstance(properties.getProperty("algorithm"));
+            }
         } catch (NoSuchAlgorithmException nsae) {
             logger.error(nsae);
         }

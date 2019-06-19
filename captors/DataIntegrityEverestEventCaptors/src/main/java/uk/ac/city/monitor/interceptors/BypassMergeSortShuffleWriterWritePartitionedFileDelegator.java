@@ -55,6 +55,10 @@ public class BypassMergeSortShuffleWriterWritePartitionedFileDelegator {
 
         MessageDigest md = MessageDigest.getInstance("MD5");
 
+        if(properties.getProperty("algorithm")!= null){
+            md = MessageDigest.getInstance(properties.getProperty("algorithm"));
+        }
+
         Map<String, String > parameters = new LinkedHashMap<>();
         parameters.put("appId", applicationId);
         parameters.put("appName", applicationName);
