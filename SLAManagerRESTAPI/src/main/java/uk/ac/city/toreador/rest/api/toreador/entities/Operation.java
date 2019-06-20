@@ -9,7 +9,7 @@ import java.util.Set;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "operations", catalog = "toreador")
+@Table(name = "operations", catalog = "slamanager")
 public class Operation implements java.io.Serializable {
 
 	private Integer id;
