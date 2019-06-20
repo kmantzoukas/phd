@@ -1,0 +1,1704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    >
+  <!--
+      xmlns:cm="http://www.cumulus.org/certificate/model"
+      targetNamespace="http://www.cumulus.org/certificate/model/lifecycle"
+  -->
+
+  <!--
+      <xs:import schemaLocation="NewCommonPartsCM.xsd"
+      namespace="http://www.cumulus.org/certificate/model"/>
+      <xs:import schemaLocation="NewCommonPartsCM.xsd"/>
+  -->
+
+  <xs:complexType name="tStateTransitionModel">
+    <xs:sequence>
+      <xs:element name="TimeUnit" type="tTimeUnit"/>
+      <xs:element name="Parameters" type="tListOfParameters" minOccurs="0"/>
+      <xs:element name="Variables" type="tListOfVariables" minOccurs="1"/>
+      <xs:element name="Transitions" type="tListOfTransitions" minOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tTimeUnit">
+    <xs:sequence>
+      <xs:element ref="ExprNumericalAbs"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="tListOfVariables">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="tVarDeclAbs"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="tVarDeclAbs" abstract="true" type="tVarDecl"/>
+
+  <xs:complexType name="tVarDecl" abstract="true">
+    <xs:sequence>
+      <xs:group ref="gVariableName"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tListOfParameters">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="tParDeclAbs"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="tParDeclAbs" abstract="true" type="tParDecl"/>
+
+  <xs:complexType name="tParDecl" abstract="true">
+    <xs:sequence>
+      <xs:group ref="gVariableName"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tListOfTransitions">
+    <xs:sequence minOccurs="1" maxOccurs="unbounded">
+      <xs:element ref="tTrDeclAbs"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="tTrDeclAbs" abstract="true" type="tTrDecl"/>
+
+  <xs:complexType name="tTrDecl" abstract="true"/>
+
+  <xs:element name="BooleanVar" substitutionGroup="tVarDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tVarDecl">
+          <xs:sequence>
+            <xs:element name="InitialValue" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprBooleanAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="IntVar" substitutionGroup="tVarDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tVarDecl">
+          <xs:sequence>
+            <xs:element name="Min">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Max">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="InitialValue">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="FloatVar" substitutionGroup="tVarDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tVarDecl">
+          <xs:sequence>
+            <xs:element name="Min">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Max">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="InitialValue">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DurationVar" substitutionGroup="tVarDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tVarDecl">
+          <xs:sequence>
+            <xs:element name="Min">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="Max">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="InitialValue">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <!--<xs:attribute name="scale" type="xs:integer" use="prohibited"
+              fixed="1"/>-->
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- <xs:element name="SecondsVar" substitutionGroup="tVarDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tVarDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="Min"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="Max"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\-<xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--             fixed="1"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <!-- <xs:element name="MinutesVar" substitutionGroup="tVarDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tVarDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="Min"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="Max"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\-<xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--             fixed="60"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <!-- <xs:element name="HoursVar" substitutionGroup="tVarDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tVarDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="Min"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="Max"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\-<xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--             fixed="3600"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <!-- <xs:element name="DaysVar" substitutionGroup="tVarDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tVarDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="Min"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="Max"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\-<xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--             fixed="3600"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <!-- <xs:element name="WeeksVar" substitutionGroup="tVarDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tVarDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="Min"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="Max"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\- <xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--              fixed="604800"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <xs:element name="EnumerationVar" substitutionGroup="tVarDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tVarDecl">
+          <xs:sequence>
+            <xs:sequence maxOccurs="unbounded">
+              <xs:element name="V" type="tIdName"/>
+            </xs:sequence>
+            <xs:element name="InitialValue" type="tIdName" minOccurs="0"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ClockVar" substitutionGroup="tVarDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tVarDecl"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!--
+      <xs:element name="Duration" type="tVarDeclDuration"/>
+
+Time units create a new type - one can convert between these
+types, just as one can convert between an Integer and a
+Float (but not between them and a Bool, like one cannot
+convert a duration into a Float or vice-versa).
+  -->
+  <!--
+      These have been turned into functions. So now one writes <Seconds><Nano>3</Nano></Seconds> and <Minutes><Micro>5</Micro></Minutes>
+      <xs:element name="NanoSecs" type="tVarDeclNum" />
+      <xs:element name="MicroSecs" type="tVarDeclNum" />
+      <xs:element name="MilliSecs" type="tVarDeclNum" />
+  -->
+  <!--  <xs:element name="Seconds" type="tVarDeclNum"/>
+       <xs:element name="Minutes" type="tVarDeclNum"/>
+       <xs:element name="Hours" type="tVarDeclNum"/>
+       <xs:element name="Days" type="tVarDeclNum"/>
+       <xs:element name="Weeks" type="tVarDeclNum"/>-->
+  <!--
+      Don't like months & years, as they are of variable length -
+      use the other time units.
+
+<xs:element name="months"    type="tExprNumerical"/>
+<xs:element name="years"     type="tExprNumerical"/>
+  -->
+  <!--  </xs:choice>
+       </xs:complexType>-->
+
+
+  <xs:element name="BooleanParam" substitutionGroup="tParDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tParDecl">
+          <xs:sequence>
+            <xs:element name="InitialValue" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprBooleanAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="IntParam" substitutionGroup="tParDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tParDecl">
+          <xs:sequence>
+            <xs:element name="InitialValue">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="FloatParam" substitutionGroup="tParDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tParDecl">
+          <xs:sequence>
+            <xs:element name="InitialValue">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- <xs:element name="tParDeclDurationAbs" substitutionGroup="tParDeclAbs" abstract="true" type="ParDeclDurationAbs"/> -->
+
+  <!-- <xs:complexType name="ParDeclDurationAbs" abstract="true"> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tParDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!-- </xs:complexType> -->
+
+  <!-- <xs:element name="SecondsParam" substitutionGroup="tParDeclAbs" -->
+  <!--        type="ParDeclDurationAbs"/> -->
+
+  <!-- <xs:element name="MinutesParam" substitutionGroup="tParDeclDurationAbs"/> -->
+
+  <!-- <xs:element name="HoursParam" substitutionGroup="tParDeclDurationAbs"/> -->
+
+  <!-- <xs:element name="DaysParam" substitutionGroup="tParDeclDurationAbs"/> -->
+
+  <!-- <xs:element name="WeeksParam" substitutionGroup="tParDeclDurationAbs"/> -->
+
+  <xs:element name="DurationParam" substitutionGroup="tParDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tParDecl">
+          <xs:sequence>
+            <xs:element name="InitialValue">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprNumericalAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <!--<xs:attribute name="scale" type="xs:integer" use="prohibited"
+              fixed="1"/>-->
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- <xs:element name="SecondsParam" substitutionGroup="tParDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tParDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\-<xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--             fixed="1"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <!-- <xs:element name="MinutesParam" substitutionGroup="tParDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tParDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\-<xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--             fixed="60"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <!-- <xs:element name="HoursParam" substitutionGroup="tParDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tParDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\-<xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--             fixed="3600"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <!-- <xs:element name="DaysParam" substitutionGroup="tParDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tParDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\-<xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--             fixed="86400"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <!-- <xs:element name="WeeksParam" substitutionGroup="tParDeclAbs"> -->
+  <!--   <xs:complexType> -->
+  <!--     <xs:complexContent> -->
+  <!--       <xs:extension base="tParDecl"> -->
+  <!--         <xs:sequence> -->
+  <!--           <xs:element name="InitialValue"> -->
+  <!--             <xs:complexType> -->
+  <!--               <xs:sequence> -->
+  <!--                 <xs:element ref="ExprNumericalAbs"/> -->
+  <!--               </xs:sequence> -->
+  <!--             </xs:complexType> -->
+  <!--           </xs:element> -->
+  <!--         </xs:sequence> -->
+  <!--         <!-\- <xs:attribute name="scale" type="xs:integer" use="prohibited" -->
+  <!--              fixed="604800"/>-\-> -->
+  <!--       </xs:extension> -->
+  <!--     </xs:complexContent> -->
+  <!--   </xs:complexType> -->
+  <!-- </xs:element> -->
+
+  <xs:element name="Issue" substitutionGroup="tTrDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tTrDecl">
+          <xs:sequence>
+            <xs:element name="Guard" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprBooleanAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="gActionType"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Refuse" substitutionGroup="tTrDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tTrDecl">
+          <xs:sequence>
+            <xs:element name="Guard" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprBooleanAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="gActionType"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Revoke" substitutionGroup="tTrDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tTrDecl">
+          <xs:sequence>
+            <xs:element name="Guard" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprBooleanAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="gActionType"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Expire" substitutionGroup="tTrDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tTrDecl">
+          <xs:sequence>
+            <xs:element name="Guard" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprBooleanAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="gActionType"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Other" substitutionGroup="tTrDeclAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tTrDecl">
+          <xs:sequence>
+            <xs:element name="Guard" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element ref="ExprBooleanAbs"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:group minOccurs="0" maxOccurs="unbounded" ref="gActionType"/>
+          </xs:sequence>
+          <xs:attribute name="name" type="tIdName" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!--  <xs:complexType name="tTransitionCall">
+       <xs:sequence>
+       <xs:element name="CallEvent" type="OperationRefType"/>
+       <xs:element name="Guard" type="tExprBoolean" minOccurs="0"/>
+       <xs:group minOccurs="0" maxOccurs="unbounded" ref="gActionType"/>
+       </xs:sequence>
+       <xs:attribute name="id" type="tIdName"/>
+       </xs:complexType>-->
+
+  <xs:complexType name="tStateAction">
+    <xs:sequence maxOccurs="unbounded">
+      <xs:group ref="gActionType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:group name="gActionType">
+    <xs:sequence>
+      <!--            <xs:element name="Invoke" type="OperationRefType"/>-->
+      <xs:element name="Assign" type="tAssignment"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:complexType name="tAssignment">
+    <xs:sequence>
+      <xs:group ref="gVariableName"/>
+      <xs:choice>
+        <xs:sequence>
+          <xs:element ref="ExprBooleanAbs"/>
+        </xs:sequence>
+        <xs:sequence>
+          <!-- SEMANTICS
+               We cannot use the value of a clock in the RHS of a
+               duration variable assignment.
+          -->
+          <xs:element ref="ExprNumericalAbs"/>
+        </xs:sequence>
+        <xs:element name="clock_reset"/>
+        <!--
+            <xs:sequence>
+            <xs:group ref="gExprDuration"/>
+            </xs:sequence>
+        -->
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- <xs:group name="gLifeCycleEvent"> -->
+  <!--   <xs:choice> -->
+  <!--     <\!-\- NEW -->
+  <!--          Other gLifeCycleEvent instances tranformed to Functions -\-> -->
+  <!--     <xs:element name="Issue"/> -->
+  <!--     <\!-\- NEW -\-> -->
+  <!--     <xs:element name="Expire"/> -->
+  <!--     <xs:element name="Refuse"/> -->
+  <!--     <xs:element name="Revoke"/> -->
+  <!--     <xs:element name="Other"/> -->
+  <!--   </xs:choice> -->
+  <!-- </xs:group> -->
+
+  <!--<xs:element name="ExprBoolean" type="tBoolRef"/>-->
+
+  <xs:element name="ExprBooleanAbs" abstract="true" type="tExprBooleanAbs"/>
+
+  <xs:complexType name="tExprBooleanAbs" abstract="true"/>
+
+  <xs:element name="True" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="False" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Not" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprBooleanAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Implies" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprBooleanAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Xor" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprBooleanAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="IsEquivTo" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprBooleanAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- If-Then-Else for Boolean expressions -->
+  <xs:element name="ITEb" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprBooleanAbs" minOccurs="3" maxOccurs="3"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- SEMANTICS:
+       (or)  = false [no argument is true]    (or b)  = b
+       (and) = true  [no argument is false]   (and b) = b
+  -->
+  <xs:element name="And" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprBooleanAbs" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Or" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprBooleanAbs" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!--<xs:element name="ExprRelationalGeneralised" substitutionGroup="ExprBooleanAbs" abstract="false">
+      <xs:complexType>
+      <xs:complexContent>
+      <xs:extension base="tExprBooleanAbs">
+      <xs:sequence>
+      <xs:element ref="ExprRelationalGeneralisedAbs"/>
+      </xs:sequence>
+      </xs:extension>
+      </xs:complexContent>
+      </xs:complexType>
+      </xs:element>-->
+
+  <!--
+
+<xs:element name="ExprRelationalGeneralisedAbs" abstract="true" type="tExprRelationalGeneralisedAbs"/>
+
+<xs:complexType name="tExprRelationalGeneralisedAbs" abstract="true"/>-->
+
+  <xs:element name="EvidenceSufficiencyCondition" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:attribute name="xquery" type="xs:string" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ConflictCondition" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:attribute name="xquery" type="xs:string" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="CollectorCondition" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:attribute name="xquery" type="xs:string" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ExpirationCondition" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:attribute name="xquery" type="xs:string" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Strict operators for clocks -->
+  <xs:element name="less-than" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="greater-than" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Non-strict operators for clocks -->
+  <!-- Clock operands
+       Must be non-strict for all Prism PTA engines to work! -->
+  <!-- SEMANTICS
+       Can only compare a clock against a tExprDuration that
+       should not contain another clock!!!
+  -->
+  <xs:element name="equal-to" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="unequal-to" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="less-than-equal-to" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="greater-than-equal-to" substitutionGroup="ExprBooleanAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprBooleanAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ExprNumericalAbs" abstract="true"/>
+  <!-- SEMANTICS:
+       (+ n) = n
+       (- n) = -n
+       (* n) = n
+       (/ n) = 1/n
+
+BUT:
+
+ed ::=
+| n gDuration
+| ed + ed
+| ed - ed
+| n * ed
+| ed * n
+| ed / n
+
+where n is a gExprNumerical and ed a gExprDuration
+Also n ::= ed / ed
+  -->
+
+  <xs:complexType name="tExprNumericalAbs" abstract="true"/>
+
+  <!-- Can be a parameter, variable, enum value -->
+  <xs:element name="Id" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:attribute name="name" type="tIdName" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Int" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:attribute name="value" type="xs:integer" use="required"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Float" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:attribute name="value" type="xs:float" use="required"/>
+          <!-- <xs:sequence> -->
+          <!--   <xs:element name="value" type="xs:float"/> -->
+          <!-- </xs:sequence> -->
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Plus" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Minus" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Multiply" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Divide" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Modulo" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="EvidenceRef" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tEvidenceRef"> <!-- A different base than tExprNumericalAbs ? Does it work? -->
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="tEvidenceRef">
+    <xs:simpleContent>
+      <xs:extension base="xs:string"> <!-- DOES THIS WORK?!?! Maybe use a restriction for Id / Int / Float to get tIdName / xs:integer / xs:float directly -->
+        <xs:attribute name="referencePath" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- <xs:group name="gExprNumerical">
+       <xs:sequence>
+       <xs:choice>
+       <xs:element name="EvidenceRef" type="tEvidenceRef"/>
+
+<!-\- <xs:group ref="gIntegerOrFloat"/> DONE -\->
+<!-\- <xs:group ref="gVariableName"/> DONE -\->
+<xs:group ref="gFunction"/>
+<xs:element name="Plus" type="tExprNumerical1toN"/>
+<xs:element name="Minus" type="tExprNumerical1toN"/>
+<xs:element name="Multiply" type="tExprNumerical1toN"/>
+<xs:element name="Divide" type="tExprNumerical1toN"/>
+<xs:element name="Modulo" type="tExprNumerical2"/>
+</xs:choice>
+</xs:sequence>
+</xs:group>-->
+
+  <xs:element name="Max" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"  minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Min" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"  minOccurs="1" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- To be able to write duration expressions. The return type is
+       Duration(DurationInt/DurationFloat ?), it needs to be matched
+       dynamically. -->
+  <xs:element name="Seconds" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Minutes" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Hours" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Days" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Weeks" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Nano" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Micro" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Milli" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Centi" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Deci" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Deca" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Hecto" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Kilo" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Mega" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Giga" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Floor" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Ceil" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Pow" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Log" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ITEn" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="ExprBooleanAbs"/>
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="BoundedInc" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <!-- bounded_inc: base, bound -->
+            <xs:element ref="ExprNumericalAbs" minOccurs="2" maxOccurs="2"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="BoundedStep" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <!-- bounded_step: base, bound, step -->
+            <xs:element ref="ExprNumericalAbs" minOccurs="3" maxOccurs="3"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="SeenEvents" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ViolatedAssertions" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Violations" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="Id" minOccurs="1"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="PenaltyAmount" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="Id" minOccurs="1"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="Counter" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+          <xs:sequence>
+            <xs:element ref="Id" minOccurs="1"/>
+            <xs:element ref="Id" minOccurs="1"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="SatisfiedAssertions" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ValidityChecksSatisfied" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DetectedAnomalies" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ResolvedAnomalies" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="UnresolvedAnomalies" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="DetectedConflicts" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ResolvedConflicts" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="UnresolvedConflicts" substitutionGroup="ExprNumericalAbs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="tExprNumericalAbs">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!--<xs:group name="gFunction">
+      <xs:choice>
+      <!-\-      <!-\\- xs:element name="Function" type="FunctionType" -\\->
+      <xs:element name="Max" type="tExprNumerical1toN"/>
+      <xs:element name="Min" type="tExprNumerical1toN"/>
+
+<!-\\- Scaling modifiers - see https://en.wikipedia.org/wiki/Metric_prefix -\\->
+<xs:element name="Nano" type="tExprNumerical"/>
+<!-\\- 10^-9 -\\->
+<xs:element name="Micro" type="tExprNumerical"/>
+<!-\\- 10^-6 -\\->
+<xs:element name="Milli" type="tExprNumerical"/>
+<!-\\- 10^-3 -\\->
+<xs:element name="Centi" type="tExprNumerical"/>
+<!-\\- 10^-2 -\\->
+<xs:element name="Deci" type="tExprNumerical"/>
+<!-\\- 10^-1 -\\->
+<xs:element name="Deca" type="tExprNumerical"/>
+<!-\\- 10^+1 -\\->
+<xs:element name="Hecto" type="tExprNumerical"/>
+<!-\\- 10^+2 -\\->
+<xs:element name="Kilo" type="tExprNumerical"/>
+<!-\\- 10^+3 -\\->
+<xs:element name="Mega" type="tExprNumerical"/>
+<!-\\- 10^+6 -\\->
+<xs:element name="Giga" type="tExprNumerical"/>
+<!-\\- 10^+9 -\\->
+
+<xs:element name="Floor" type="tExprNumerical"/>
+<xs:element name="Ceil" type="tExprNumerical"/>
+
+<!-\\- x to the power of y - both Float -\\->
+<xs:element name="Pow" type="tExprNumerical2"/>
+<!-\\- x's y-based logarithm - both Float -\\->
+<xs:element name="Log" type="tExprNumerical2"/>
+
+<!-\\- If-Then-Else for Numerical expressions -\\->
+<xs:element name="ITEn" type="tExprNumerical2"/> <!-\\- Is of type tExprBooleanNumerical2 -\\->
+
+<!-\\- bounded_inc: base, bound -\\->
+<xs:element name="BoundedInc" type="tExprNumerical2"/>
+<!-\\- bounded_step: base, bound, step -\\->
+<xs:element name="BoundedStep" type="tExprNumerical3"/>-\->
+
+<!-\- LifeCycle variables -\->
+<xs:element name="SeenEvents"/>
+<xs:element name="ViolatedAssertions"/>
+<xs:element name="SatisfiedAssertions"/>
+<xs:element name="ValidityChecksSatisfied"/>
+<xs:element name="DetectedAnomalies"/>
+<xs:element name="ResolvedAnomalies"/>
+<xs:element name="UnresolvedAnomalies"/>
+<xs:element name="DetectedConflicts"/>
+<xs:element name="ResolvedConflicts"/>
+<xs:element name="UnresolvedConflicts"/>
+</xs:choice>
+</xs:group>-->
+
+  <!--
+      <xs:complexType name="tExprNumerical">
+      <xs:sequence>
+      <xs:element ref="ExprNumericalAbs"/>
+      </xs:sequence>
+      </xs:complexType>
+
+<xs:complexType name="tExprNumerical2">
+<xs:sequence>
+<xs:element ref="ExprNumericalAbs"/>
+<xs:element ref="ExprNumericalAbs"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="tExprNumerical3">
+<xs:sequence minOccurs="3" maxOccurs="3">
+<xs:element ref="ExprNumericalAbs"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="tExprNumerical0toN">
+<xs:sequence minOccurs="0" maxOccurs="unbounded">
+<xs:element ref="ExprNumericalAbs"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="tExprNumerical1toN">
+<xs:sequence minOccurs="1" maxOccurs="unbounded">
+<xs:element ref="ExprNumericalAbs"/>
+</xs:sequence>
+</xs:complexType>
+  -->
+
+  <!-- <xs:complexType name="tExprBooleanNumerical2">
+       <xs:sequence>
+       <xs:group ref="gExprBoolean"/>
+       <xs:group ref="gExprNumerical"/>
+       <xs:group ref="gExprNumerical"/>
+       </xs:sequence>
+       </xs:complexType>-->
+
+  <!--  <xs:group name="gIntegerOrFloat">
+       <xs:sequence>
+       <xs:element name="const" type="xs:float"/>
+       </xs:sequence>
+       </xs:group>-->
+
+  <xs:group name="gVariableName">
+    <xs:sequence>
+      <xs:element name="VariableName" type="tIdName"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:simpleType name="tIdName">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:pattern value="[A-Za-z][A-Za-z0-9_]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
