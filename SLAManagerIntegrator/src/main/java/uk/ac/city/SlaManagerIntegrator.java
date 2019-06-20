@@ -18,13 +18,20 @@ import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
+
 @SpringBootApplication
 public class SlaManagerIntegrator implements CommandLineRunner {
+
+    final static Logger log = Logger.getLogger(SlaManagerIntegrator.class);
 
     @Autowired
     ApplicationContext context;
@@ -70,6 +77,11 @@ public class SlaManagerIntegrator implements CommandLineRunner {
 
         @Override
         public void run() {
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            log.info("Checking for new tasks @" + dateFormat.format(date));
+
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             headers.setContentType(MediaType.APPLICATION_JSON);
