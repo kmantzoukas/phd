@@ -1,0 +1,77 @@
+// -*- mode: c++ ; -*-
+ctmc // A Continuous-Time Markov Chain model
+
+const double minute = 60;
+const double hour = 60*minute;
+const double day = 1;//24*hour;//set day as time unit
+const double week = 7*day;
+const double year = 365*day;
+const double month = year/12;//an approximation
+
+const int MaxInteger; //= 51; // = max(Xm+1,3,3*k+1);
+
+formula service_DataCleaningService_operation_SparkKmean_input_initSteps_IntegrityViolationRate = (0.82/day);
+formula service_DataCleaningService_operation_SparkKmean_AvailabilityViolationRate = (0.45/day);
+
+//Environment - Monitoring module auto-derived
+module service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity
+[service_DataCleaningService_operation_SparkKmean_input_initSteps_IntegrityViolated] true -> service_DataCleaningService_operation_SparkKmean_input_initSteps_IntegrityViolationRate : true;
+endmodule
+module service_DataCleaningService_operation_SparkKmean_Availability
+[service_DataCleaningService_operation_SparkKmean_AvailabilityViolated] true -> service_DataCleaningService_operation_SparkKmean_AvailabilityViolationRate : true;
+endmodule
+
+//SLA Manager module
+
+// guard_ActionGT renames violations_GT to INCviolations_GT (all other variables are kept the same)
+formula guard_ReNegotiateservice_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity = (INCviolations_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity >= 3);
+formula guard_Penaltyservice_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity = (INCviolations_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity >= 1);
+formula guard_NOTIFYservice_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity = (INCviolations_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity >= 1);
+formula guard_NOTIFYservice_DataCleaningService_operation_SparkKmean_Availability = (INCviolations_service_DataCleaningService_operation_SparkKmean_Availability >= 1);
+formula guard_MODIFYservice_DataCleaningService_operation_SparkKmean_Availability = (INCviolations_service_DataCleaningService_operation_SparkKmean_Availability >= 1);
+formula guard_ReNegotiateservice_DataCleaningService_operation_SparkKmean_Availability = (INCviolations_service_DataCleaningService_operation_SparkKmean_Availability >= 3);
+formula INCviolations_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity = (min(MaxInteger,violations_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity+1));
+formula INCcounter_Penalty_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity= (min(MaxInteger,counter_Penalty_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity+(guard_Penaltyservice_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity?1:0)));
+formula INCpenalty_amount_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity = (min(MaxInteger, penalty_amount_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity+(guard_Penaltyservice_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity?10:0)));formula INCcounter_NOTIFY_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity= (min(MaxInteger,counter_NOTIFY_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity+(guard_NOTIFYservice_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity?1:0)));
+
+formula INCviolations_service_DataCleaningService_operation_SparkKmean_Availability = (min(MaxInteger,violations_service_DataCleaningService_operation_SparkKmean_Availability+1));
+formula INCcounter_NOTIFY_service_DataCleaningService_operation_SparkKmean_Availability= (min(MaxInteger,counter_NOTIFY_service_DataCleaningService_operation_SparkKmean_Availability+(guard_NOTIFYservice_DataCleaningService_operation_SparkKmean_Availability?1:0)));
+formula INCcounter_MODIFY_service_DataCleaningService_operation_SparkKmean_Availability= (min(MaxInteger,counter_MODIFY_service_DataCleaningService_operation_SparkKmean_Availability+(guard_MODIFYservice_DataCleaningService_operation_SparkKmean_Availability?1:0)));
+
+module SLA_Manager
+SLAactive : bool init true;
+violations_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity : [0 .. MaxInteger] init 0;
+counter_Penalty_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity : [0 .. MaxInteger] init 0;
+penalty_amount_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity : [0 .. MaxInteger] init 0;
+counter_NOTIFY_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity : [0 .. MaxInteger] init 0;
+violations_service_DataCleaningService_operation_SparkKmean_Availability : [0 .. MaxInteger] init 0;
+counter_NOTIFY_service_DataCleaningService_operation_SparkKmean_Availability : [0 .. MaxInteger] init 0;
+counter_MODIFY_service_DataCleaningService_operation_SparkKmean_Availability : [0 .. MaxInteger] init 0;
+
+[service_DataCleaningService_operation_SparkKmean_input_initSteps_IntegrityViolated]  SLAactive -> 1:
+(SLAactive'=  ! (guard_ReNegotiateservice_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity))
+ & (violations_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity'=INCviolations_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity)
+ & (counter_Penalty_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity'=INCcounter_Penalty_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity)
+ & (penalty_amount_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity'=INCpenalty_amount_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity)
+ & (counter_NOTIFY_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity'=INCcounter_NOTIFY_service_DataCleaningService_operation_SparkKmean_input_initSteps_Integrity)
+ ;
+
+[service_DataCleaningService_operation_SparkKmean_AvailabilityViolated]  SLAactive -> 1:
+(SLAactive'=  ! (guard_ReNegotiateservice_DataCleaningService_operation_SparkKmean_Availability))
+ & (violations_service_DataCleaningService_operation_SparkKmean_Availability'=INCviolations_service_DataCleaningService_operation_SparkKmean_Availability)
+ & (counter_NOTIFY_service_DataCleaningService_operation_SparkKmean_Availability'=INCcounter_NOTIFY_service_DataCleaningService_operation_SparkKmean_Availability)
+ & (counter_MODIFY_service_DataCleaningService_operation_SparkKmean_Availability'=INCcounter_MODIFY_service_DataCleaningService_operation_SparkKmean_Availability)
+ ;
+endmodule
+
+rewards "time" 
+   true : 1;
+endrewards
+
+rewards "service_DataCleaningService_operation_SparkKmean_input_initSteps_IntegrityViolations" // expected number of times it is violated
+   [service_DataCleaningService_operation_SparkKmean_input_initSteps_IntegrityViolated] true: 1; 
+endrewards
+
+rewards "service_DataCleaningService_operation_SparkKmean_AvailabilityViolations" // expected number of times it is violated
+   [service_DataCleaningService_operation_SparkKmean_AvailabilityViolated] true: 1; 
+endrewards

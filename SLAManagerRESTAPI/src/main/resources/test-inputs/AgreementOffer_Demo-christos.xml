@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsag:AgreementOffer xmlns:wsa="http://www.w3.org/2005/08/addressing"
+    xmlns:asrt="http://www.cumulus.org/certificate/model"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsag="http://schemas.ggf.org/graap/2007/03/ws-agreement"
+    xmlns:wsrf-bf="http://docs.oasis-open.org/wsrf/bf-2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:hfp="http://www.w3.org/2001/XMLSchema-hasFacetAndProperty"
+    xsi:schemaLocation="http://schemas.ggf.org/graap/2007/03/ws-agreement file:/Users/sbkg342/Dropbox/My%20work/Toreador/PrismTranslate/src/ws-agreement-demo.xsd">
+    <wsag:Context>
+        <wsag:ServiceProvider>AgreementInitiator</wsag:ServiceProvider>
+        <wsag:SLA_LC_Parameters>
+            <asrt:IntParam>
+                <VariableName>TooManyVio</VariableName>
+                <InitialValue>
+                    <asrt:Int value="1"/>
+                </InitialValue>
+            </asrt:IntParam>
+            <asrt:DurationParam>
+                <VariableName>expiryTime</VariableName>
+                <InitialValue>
+                    <asrt:Days>
+                        <asrt:Int value="10"/>
+                    </asrt:Days>
+                </InitialValue>
+            </asrt:DurationParam>
+        </wsag:SLA_LC_Parameters>
+    </wsag:Context>
+    <wsag:Terms>
+        <wsag:All>
+            <wsag:ServiceDescriptionTerm wsag:Name="SDT1" wsag:ServiceName="LS_BDAServiceInterface">
+                <wsag:Type>ExternalOperation</wsag:Type>
+                <any xmlns="http://www.w3.org/2001/XMLSchema">
+                    <annotation>
+                        <documentation>
+                            <wsdl:Definition name="LS_BDAServiceInterface">
+                                <message name="AverageConsumptionRequest">
+                                    <part name="DeviceType" type="xsd:string"/>
+                                    <part name="Timeperiod" type="xsd:string"/>
+                                </message>
+                                <message name="AverageConsumptionResponse">
+                                    <part name="result" type="xs:float"/>
+                                </message>
+                                <portType name="AverageConsumption_PortType">
+                                    <operation name="AverageConsumptionResult">
+                                        <input message="AverageConsumptionRequest"/>
+                                        <output message="AverageConsumptionResponse"/>
+                                    </operation>
+                                </portType>
+                                <binding> ... </binding>
+                                <service name="LS_BDAServiceInterface">
+                                    <port binding="tns:AverageConsumption_Binding"
+                                        name="AverageConsumption_Port"> </port>
+                                </service>
+                            </wsdl:Definition>
+                        </documentation>
+                    </annotation>
+                </any>
+            </wsag:ServiceDescriptionTerm>
+            <wsag:ServiceDescriptionTerm wsag:Name="SDT2" wsag:ServiceName="LS_BDAService">
+                <wsag:Type>ExternalOperation</wsag:Type>
+                <any xmlns="http://www.w3.org/2001/XMLSchema">
+                    <annotation>
+                        <documentation>
+                            <wsdl:Definition name="LS_BDAService">
+                                <message name="PushDataRequest">
+                                    <part name="Data" type="LS_SmartGatewayData"/>
+                                </message>
+                                <portType name="PushData_PortType">
+                                    <operation name="PushData">
+                                        <input message="PushDataRequest"/>
+                                    </operation>
+                                </portType>
+                                <binding> ... </binding>
+                                <service name="LS_BDAService">
+                                    <port binding="PushData_Binding" name="PushData_Port"> </port>
+                                </service>
+                            </wsdl:Definition>
+                        </documentation>
+                    </annotation>
+                </any>
+            </wsag:ServiceDescriptionTerm>
+            <wsag:ServiceDescriptionTerm wsag:Name="SDT3" wsag:ServiceName="LS_BDAService">
+                <wsag:Type>InternalOperation</wsag:Type>
+                <any xmlns="http://www.w3.org/2001/XMLSchema">
+                    <annotation>
+                        <documentation>
+                            <wsdl:Definition name="LS_BDAService">
+                                <message name="CombineAverageRequest">
+                                    <part name="PartialAverage" type="pave"/>
+                                </message>
+                                <message name="CombineAverageResponse">
+                                    <part name="MergedAverage" type="xs:float"/>
+                                </message>
+                                <portType name="CombineAverageConsumption_PortType">
+                                    <operation name="CombineAverageConsumption">
+                                        <input message="CombineAverageRequest"/>
+                                        <output message="CombineAverageResponse"/>
+                                    </operation>
+                                </portType>
+                                <binding> ... </binding>
+                                <service name="LS_BDAService">
+                                    <port binding="CombineAverageConsumption_Binding"
+                                        name="CombineAverageConsumption_Port"> </port>
+                                </service>
+                            </wsdl:Definition>
+                        </documentation>
+                    </annotation>
+                </any>
+            </wsag:ServiceDescriptionTerm>
+            <wsag:ServiceDescriptionTerm wsag:Name="SDT4" wsag:ServiceName="LS_BDAService">
+                <wsag:Type>InternalOperation</wsag:Type>
+                <any xmlns="http://www.w3.org/2001/XMLSchema">
+                    <annotation>
+                        <documentation>
+                            <wsdl:Definition name="LS_BDAService">
+                                <message name="PartialAverageRequest">
+                                    <part name="ListOfData" type="listData"/>
+                                </message>
+                                <message name="PartialAverageResponse">
+                                    <part name="PartialAverage" type="pave"/>
+                                </message>
+                                <portType name="ComputePartialAverageConsumption_PortType">
+                                    <operation name="ComputePartialAverageConsumption">
+                                        <input message="PartialAverageRequest"/>
+                                        <output message="PartialAverageResponse"/>
+                                    </operation>
+                                </portType>
+                                <binding> ... </binding>
+                                <service name="LS_BDAService">
+                                    <port binding="ComputePartialAverageConsumption_Binding"
+                                        name="ComputePartialAverageConsumption_Port"> </port>
+                                </service>
+                            </wsdl:Definition>
+                        </documentation>
+                    </annotation>
+                </any>
+            </wsag:ServiceDescriptionTerm>
+            <wsag:ServiceDescriptionTerm wsag:Name="SDT5" wsag:ServiceName="LS_BDAService">
+                <wsag:Type>InternalOperation</wsag:Type>
+                <any xmlns="http://www.w3.org/2001/XMLSchema">
+                    <annotation>
+                        <documentation>
+                            <wsdl:Definition name="LS_BDAService">
+                                <message name="GetDataRequest">
+                                    <part name="PartitionId" type="xsd:string"/>
+                                </message>
+                                <message name="GetDataResponse">
+                                    <part name="ListOfData" type="listData"/>
+                                </message>
+                                <portType name="GetData_PortType">
+                                    <operation name="GetData">
+                                        <input message="GetDataRequest"/>
+                                        <output message="GetDataResponse"/>
+                                    </operation>
+                                </portType>
+                                <binding> ... </binding>
+                                <service name="LS_BDAService">
+                                    <port binding="GetData_Binding" name="GetData_Port"/>
+                                </service>
+                            </wsdl:Definition>
+                        </documentation>
+                    </annotation>
+                </any>
+            </wsag:ServiceDescriptionTerm>
+            <wsag:ServiceDescriptionTerm wsag:Name="SDT6" wsag:ServiceName="LS_BDAService">
+                <wsag:Type>DataModel</wsag:Type>
+                <any xmlns="http://www.w3.org/2001/XMLSchema">
+                    <annotation>
+                        <documentation>
+                            <wsdl:types>
+                                <ComplexType name="pave">
+                                    <sequence>
+                                        <element name="averagePartialValue" type="float"/>
+                                        <element name="numberOfMeasurement" type="int"/>
+                                    </sequence>
+                                </ComplexType>
+                                <ComplexType name="listData">
+                                    <sequence>
+                                        <element name="DeviceType" type="string"/>
+                                        <element name="Consumption" type="float"/>
+                                        <element name="Timestamp" type="dateTime"/>
+                                    </sequence>
+                                </ComplexType>
+                                <ComplexType name="LS_SmartGatewayData">
+                                    <sequence>
+                                        <element name="GatewayId" type="string" maxOccurs="1"
+                                            minOccurs="1"/>
+                                        <element name="EnergyProduced" type="float" maxOccurs="1"
+                                            minOccurs="1"/>
+                                        <element name="Appliances" type="ListOfAppliances"
+                                            maxOccurs="unbounded" minOccurs="0"/>
+                                        <element name="Timestamp" type="dateTime"/>
+                                    </sequence>
+                                </ComplexType>
+                                <ComplexType name="ListOfAppliances">
+                                    <sequence>
+                                        <element name="Type" type="string"/>
+                                        <element name="Consumption" type="float"/>
+                                    </sequence>
+                                </ComplexType>
+                            </wsdl:types>
+                        </documentation>
+                    </annotation>
+                </any>
+            </wsag:ServiceDescriptionTerm>
+            <wsag:ServiceDescriptionTerm wsag:Name="SDT7" wsag:ServiceName="LS_BDAService">
+                <wsag:Type>Dependency</wsag:Type>
+                <wsag:Dependencies>
+                    <wsag:DataDependency>
+                        <wsag:Dependant>AverageConsumptionResult</wsag:Dependant>
+                        <wsag:Independent>CombineAverageConsumption</wsag:Independent>
+                    </wsag:DataDependency>
+                    <wsag:CallDependency>
+                        <wsag:Caller>CombineAverageConsumption</wsag:Caller>
+                        <wsag:Callee>ComputePartialAvergeConsumption</wsag:Callee>
+                    </wsag:CallDependency>
+                    <wsag:CallDependency>
+                        <wsag:Caller>ComputePartialAvergeConsumption</wsag:Caller>
+                        <wsag:Callee>GetData</wsag:Callee>
+                    </wsag:CallDependency>
+                </wsag:Dependencies>
+            </wsag:ServiceDescriptionTerm>
+            <wsag:GuaranteeTerm wsag:Name="AvailabilityGT1" wsag:Obligated="ServiceProvider">
+                <wsag:ServiceLevelObjective>
+                    <wsag:CustomServiceLevel>
+                        <wsag:DeclarativeLevel>
+                            <wsag:SLO_Category>Availability:Average_Response_Time
+                            </wsag:SLO_Category>
+                            <wsag:ServiceAsset>SDT1/wsdl:definition/portType/operation/ComputePartialAvergeConsumption</wsag:ServiceAsset>
+                        </wsag:DeclarativeLevel>
+                        <wsag:ProceduralLevel>
+                            <wsag:SLOTemplate wsag:Name="AverageResponseTime">
+                                <wsag:SLOTemplateParameters>
+                                    <wsag:SLOTemplateParameter name="Operation"
+                                        value="SDT1/wsdl:definition/portType/operation/ComputePartialAvergeConsumption"/>
+                                    <wsag:SLOTemplateParameter name="Metric" value="5"/>
+                                </wsag:SLOTemplateParameters>
+                            </wsag:SLOTemplate>
+                            <wsag:Assertion ID="GT1">
+                                <InterfaceDeclr>
+                                    <ID></ID>
+                                    <ProviderRef></ProviderRef>
+                                    <Interface>
+                                        <InterfaceRef>
+                                            <InterfaceLocation></InterfaceLocation>
+                                        </InterfaceRef>
+                                    </Interface>
+                                </InterfaceDeclr>
+                                <VariableDeclr>
+                                    <varName></varName>
+                                    <varType></varType>
+                                </VariableDeclr>
+                                <Guaranteed ID="" type="">
+                                    <quantification>
+                                        <quantifier>forall</quantifier>
+                                        <timeVariable>
+                                            <varName></varName>
+                                            <varType></varType>
+                                        </timeVariable>
+                                    </quantification>
+                                    <postcondition>
+                                        <atomicCondition>
+                                            <eventCondition>
+                                                <event>
+                                                    <eventID>
+                                                        <varName></varName>
+                                                    </eventID>
+                                                </event>
+                                            </eventCondition>
+                                        </atomicCondition>
+                                    </postcondition>
+                                </Guaranteed>
+                            </wsag:Assertion>
+                        </wsag:ProceduralLevel>
+                    </wsag:CustomServiceLevel>
+                </wsag:ServiceLevelObjective>
+                <wsag:BusinessValueList>
+                    <wsag:CustomBusinessValue>
+                        <wsag:GuardedAction>
+                        <wsag:Other>
+                            <wsag:ActionName>Notify</wsag:ActionName>
+                        </wsag:Other>
+                            <wsag:ValueExpr>   
+                                <asrt:greater-than>
+                                        <asrt:Violations>
+                                            <asrt:Id name="AvailabilityGT1"/>
+                                        </asrt:Violations>
+                                        <asrt:Int value="0"/>
+                                    </asrt:greater-than>
+                            </wsag:ValueExpr>
+                        </wsag:GuardedAction>
+                        <wsag:GuardedAction>
+                            <wsag:Other>
+                                <wsag:ActionName>Modify</wsag:ActionName>
+                            </wsag:Other>
+                            <wsag:ValueExpr>
+                                    <asrt:less-than>
+                                        <asrt:Violations>
+                                            <asrt:Id name="AvailabilityGT1"/>
+                                    </asrt:Violations>
+                                        <asrt:Int value="3"/>
+                                    </asrt:less-than>
+                            </wsag:ValueExpr>
+                        </wsag:GuardedAction>
+                        <wsag:GuardedAction>
+                            <wsag:ReNegotiate/>
+                            <wsag:ValueExpr>
+				<asrt:greater-than-equal-to>
+                                  <asrt:Violations>
+                                    <asrt:Id name="AvailabilityGT1"/>
+                                  </asrt:Violations>
+                                  <asrt:Int value="3"/>
+                                </asrt:greater-than-equal-to>
+                            </wsag:ValueExpr>
+                        </wsag:GuardedAction>
+                        <wsag:Rate>
+                            <asrt:ITEn>
+                                <asrt:equal-to>
+                                    <asrt:Counter>
+                                        <asrt:Id name="Modify"/>
+                                        <asrt:Id name="AvailabilityGT1"/>
+                                    </asrt:Counter>
+                                    <asrt:Int value="0"/>
+                                </asrt:equal-to>
+                                <asrt:Days>
+                                    <asrt:Float value="0.2"/>
+                                </asrt:Days>
+                                <asrt:Days>
+                                    <asrt:Float value="0.1"/>
+                                </asrt:Days>
+                            </asrt:ITEn>
+                        </wsag:Rate>
+                    </wsag:CustomBusinessValue>
+                </wsag:BusinessValueList>
+            </wsag:GuaranteeTerm>
+            <wsag:GuaranteeTerm wsag:Name="IntegrityGT2" wsag:Obligated="ServiceProvider">
+                <wsag:ServiceLevelObjective>
+                    <wsag:CustomServiceLevel>
+                        <wsag:DeclarativeLevel>
+                            <wsag:SLO_Category>Integrity:data-alteration-detection</wsag:SLO_Category>
+                            <wsag:ServiceAsset>SDT6/wsdl:types/complexType/pave</wsag:ServiceAsset>
+                        </wsag:DeclarativeLevel>
+                        <wsag:ProceduralLevel>
+                            <wsag:SLOTemplate wsag:Name="Integrity-at-Rest">
+                                <wsag:SLOTemplateParameters>
+                                    <wsag:SLOTemplateParameter name="DataType"
+                                        value="SDT6/wsdl:types/complexType/pave"/>
+                                    <wsag:SLOTemplateParameter name="Metric" value="True"/>
+                                </wsag:SLOTemplateParameters>
+                            </wsag:SLOTemplate>
+                            <wsag:Assertion ID="GT2">
+                                <InterfaceDeclr>
+                                    <ID></ID>
+                                    <ProviderRef></ProviderRef>
+                                    <Interface>
+                                        <InterfaceRef>
+                                            <InterfaceLocation></InterfaceLocation>
+                                        </InterfaceRef>
+                                    </Interface>
+                                </InterfaceDeclr>
+                                <VariableDeclr>
+                                    <varName></varName>
+                                    <varType></varType>
+                                </VariableDeclr>
+                                <Guaranteed ID="" type="">
+                                    <quantification>
+                                        <quantifier>forall</quantifier>
+                                        <timeVariable>
+                                            <varName></varName>
+                                            <varType></varType>
+                                        </timeVariable>
+                                    </quantification>
+                                    <postcondition>
+                                        <atomicCondition>
+                                            <eventCondition>
+                                                <event>
+                                                    <eventID>
+                                                        <varName></varName>
+                                                    </eventID>
+                                                </event>
+                                            </eventCondition>
+                                        </atomicCondition>
+                                    </postcondition>
+                                </Guaranteed>
+                            </wsag:Assertion>
+                        </wsag:ProceduralLevel>
+                    </wsag:CustomServiceLevel>
+                </wsag:ServiceLevelObjective>
+                <wsag:BusinessValueList>
+                    <wsag:CustomBusinessValue>
+                    <wsag:GuardedAction>
+                            <wsag:Other>
+                                <wsag:ActionName>Notify</wsag:ActionName>
+                            </wsag:Other>
+                            <wsag:ValueExpr>
+                                <asrt:greater-than>
+                                    <asrt:Violations>
+                                        <asrt:Id name="IntegrityGT2"/>
+                                        </asrt:Violations>
+                                    <asrt:Int value="0"/>
+                                    </asrt:greater-than>
+                            </wsag:ValueExpr>
+                    </wsag:GuardedAction>
+                    <wsag:GuardedAction>
+                            <wsag:Penalty>
+                                <wsag:Value>10</wsag:Value>
+                                <wsag:ValueUnit>GBP</wsag:ValueUnit>
+                            </wsag:Penalty>
+                            <wsag:ValueExpr>
+                                <asrt:greater-than>
+                                    <asrt:Violations>
+                                        <asrt:Id name="IntegrityGT2"/>
+                                        </asrt:Violations>
+                                    <asrt:Int value="1"/>
+                                </asrt:greater-than>
+                            </wsag:ValueExpr>
+                    </wsag:GuardedAction>
+                    <wsag:GuardedAction>
+                            <wsag:ReNegotiate/>
+                            <wsag:ValueExpr>
+                                    <asrt:greater-than-equal-to>
+                                        <asrt:Violations>
+                                            <asrt:Id name="IntegrityGT2"/>
+                                        </asrt:Violations>
+                                        <asrt:Int value="3"/>
+                                    </asrt:greater-than-equal-to>
+                            </wsag:ValueExpr>
+                    </wsag:GuardedAction>
+                        <wsag:Rate>
+                               <asrt:Days>
+                                   <asrt:Float value="0.15"/>
+                               </asrt:Days>
+                        </wsag:Rate>
+		    </wsag:CustomBusinessValue>
+                </wsag:BusinessValueList>
+            </wsag:GuaranteeTerm>
+        </wsag:All>
+    </wsag:Terms>
+</wsag:AgreementOffer>
