@@ -3,7 +3,6 @@ package uk.ac.city.monitor.agent;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.*;
-import org.apache.log4j.Logger;
 import org.apache.spark.rdd.RDD;
 import uk.ac.city.monitor.emitters.Emitter;
 import uk.ac.city.monitor.emitters.EventEmitterFactory;
