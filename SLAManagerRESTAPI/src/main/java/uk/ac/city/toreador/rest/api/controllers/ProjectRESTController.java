@@ -30,14 +30,12 @@ import uk.ac.city.toreador.rest.api.everest.repositories.TemplateDefinedReposito
 import uk.ac.city.toreador.rest.api.everest.repositories.TemplateRepository;
 import uk.ac.city.toreador.rest.api.toreador.entities.*;
 import uk.ac.city.toreador.rest.api.toreador.repositories.*;
-import uk.ac.city.toreador.validation.Translate;
 
 import javax.xml.namespace.QName;
 import javax.xml.xquery.XQConnection;
 import javax.xml.xquery.XQDataSource;
 import javax.xml.xquery.XQPreparedExpression;
 import javax.xml.xquery.XQStaticContext;
-import java.awt.*;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
@@ -203,8 +201,6 @@ public class ProjectRESTController {
 
                                 }
                             }
-
-                            //this.translateProject(user.getId(),p.getId());
                         }
                     }
                 }
