@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sun.security.krb5.internal.PAData;
 import uk.ac.city.toreador.rest.api.everest.entities.Event;
 import uk.ac.city.toreador.rest.api.everest.entities.EventParameter;
 import uk.ac.city.toreador.rest.api.everest.entities.TemplateDefined;
@@ -188,6 +187,12 @@ public class ProjectRESTController {
                                     assetSecurityPropertyPair.setId(id);
 
                                     AssetSecurityPropertyPair pair = assetSecurityPropertyPairsRepository.save(assetSecurityPropertyPair);
+
+                                    Slo slo = new Slo();
+                                    slo.setAsset(asset);
+                                    slo.setProject(p);
+                                    slo.setProperty(property);
+                                    slosRepository.save(slo);
 
                                     Operation operation = new Operation();
                                     operation.setAsset(a);
