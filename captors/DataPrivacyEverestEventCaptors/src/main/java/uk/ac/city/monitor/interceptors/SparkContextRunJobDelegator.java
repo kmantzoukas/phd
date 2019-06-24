@@ -17,14 +17,6 @@ import java.util.Properties;
 
 public class SparkContextRunJobDelegator implements Serializable{
 
-    private final EmitterType type;
-    private final Properties properties;
-
-    public SparkContextRunJobDelegator(EmitterType type, Properties properties){
-        this.type = type;
-        this.properties = properties;
-    }
-
     @RuntimeType
     public Object runJob(
             @Argument(0) RDD rdd,

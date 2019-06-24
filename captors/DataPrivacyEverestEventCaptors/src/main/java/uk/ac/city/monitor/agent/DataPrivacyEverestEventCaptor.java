@@ -119,17 +119,16 @@ public class DataPrivacyEverestEventCaptor {
                                             .withBinders(Morph.Binder.install(Morpher.class))
                                             .to(new RDDComputeDelegator(type, properties)));
                 })
-                .type(type -> type.getName().equals("org.apache.spark.SparkContext"))
-                .transform((builder, typeDescription, classLoader, module) -> {
-                    return builder
-                            .serialVersionUid(1L)
-                            .method(method -> (method.getName().equals("runJob") && method.getParameters().size() == 3))
-                            .intercept(MethodDelegation
-                                    .withDefaultConfiguration()
-                                    .withBinders(Morph.Binder.install(Morpher.class))
-                                    .to(new SparkContextRunJobDelegator(type, properties)));
-                })
-         .installOn(instrumentation);
+            .type(type -> type.getName().equals("org.apache.spark.SparkContext"))
+            .transform((builder, typeDescription, classLoader, module) -> {
+                return builder
+                    .serialVersionUid(1L)
+                    .method(method -> (method.getName().equals("runJob") && method.getParameters().size() == 3))
+                    .intercept(MethodDelegation
+                        .withDefaultConfiguration()
+                        .withBinders(Morph.Binder.install(Morpher.class))
+                        .to(new SparkContextRunJobDelegator()));
+            }).installOn(instrumentation);
 
         Emitter emitter = EventEmitterFactory.getInstance(emitterType, properties);
         emitter.connect();
