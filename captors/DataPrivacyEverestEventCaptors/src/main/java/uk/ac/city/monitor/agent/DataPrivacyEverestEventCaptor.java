@@ -1,20 +1,20 @@
 package uk.ac.city.monitor.agent;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.lang.instrument.Instrumentation;
-import java.util.*;
-
-import org.apache.log4j.Logger;
-
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.bind.annotation.Morph;
+import org.apache.log4j.Logger;
 import uk.ac.city.monitor.emitters.Emitter;
 import uk.ac.city.monitor.emitters.EventEmitterFactory;
 import uk.ac.city.monitor.enums.EmitterType;
 import uk.ac.city.monitor.interceptors.RDDComputeDelegator;
+import uk.ac.city.monitor.interceptors.SparkContextRunJobDelegator;
 import uk.ac.city.monitor.utils.Morpher;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.lang.instrument.Instrumentation;
+import java.util.*;
 
 public class DataPrivacyEverestEventCaptor {
 
@@ -118,6 +118,16 @@ public class DataPrivacyEverestEventCaptor {
                                             .withDefaultConfiguration()
                                             .withBinders(Morph.Binder.install(Morpher.class))
                                             .to(new RDDComputeDelegator(type, properties)));
+                })
+                .type(type -> type.getName().equals("org.apache.spark.SparkContext"))
+                .transform((builder, typeDescription, classLoader, module) -> {
+                    return builder
+                            .serialVersionUid(1L)
+                            .method(method -> (method.getName().equals("runJob") && method.getParameters().size() == 3))
+                            .intercept(MethodDelegation
+                                    .withDefaultConfiguration()
+                                    .withBinders(Morph.Binder.install(Morpher.class))
+                                    .to(new SparkContextRunJobDelegator(type, properties)));
                 })
          .installOn(instrumentation);
 
