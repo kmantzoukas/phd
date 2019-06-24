@@ -1,5 +1,6 @@
 package uk.ac.city;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -69,8 +70,14 @@ public class SlaManagerIntegrator implements CommandLineRunner {
         Create and run a thread executor every 3 seconds to pick up any new workflows created
          */
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(new CreateSLAProjectRunnable(), 0, 3, TimeUnit.SECONDS);
-
+        Runnable runnable = new CreateSLAProjectRunnable();
+        Thread t = new Thread(runnable);
+        t.start();
+//        while (Boolean.TRUE){
+//            Thread t = new Thread(runnable);
+//            t.start();
+//            Thread.currentThread().sleep(3000);
+//        }
     }
 
     private class CreateSLAProjectRunnable implements Runnable {
@@ -80,7 +87,8 @@ public class SlaManagerIntegrator implements CommandLineRunner {
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
-            log.info("Checking for new tasks @" + dateFormat.format(date));
+            System.out.println("Checking for new tasks @" + dateFormat.format(date));
+
 
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
@@ -92,17 +100,21 @@ public class SlaManagerIntegrator implements CommandLineRunner {
             ResponseEntity<String> response = ((RestTemplate) context.getBean("restTemplate"))
                     .exchange(String.format("http://%s:%d%s", scdf.getHost(), scdf.getPort(), scdf.getTaskDefinitionUrl()), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
             JSONObject obj = new JSONObject(response.getBody());
+
+            System.out.println(response.getBody());
              /*
              Extract the JSON definitions from the JSON response from the Spring Cloud Dataflow server
              */
-             JSONArray taskDefinitions = obj
-                .getJSONObject("_embedded").getJSONArray("taskDefinitionResourceList");
+            if(obj.has("_embedded")){
+                JSONArray taskDefinitions = obj
+                        .getJSONObject("_embedded").getJSONArray("taskDefinitionResourceList");
 
-             ResponseEntity<String> result =
-                ((RestTemplate) context.getBean("authRestTemplate"))
-                        .postForEntity(String.format("http://%s:%d%s", rest.getHost(), rest.getPort(), rest.getUrl()),
-                            new HttpEntity<String>(taskDefinitions.toString(),headers), String.class);
-        }
+                ResponseEntity<String> result =
+                        ((RestTemplate) context.getBean("authRestTemplate"))
+                                .postForEntity(String.format("http://%s:%d%s", rest.getHost(), rest.getPort(), rest.getUrl()),
+                                        new HttpEntity<String>(taskDefinitions.toString(),headers), String.class);
+                }
+            }
     }
 }
 
