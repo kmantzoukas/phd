@@ -19,7 +19,7 @@ public class EventCaptor {
 
         ExecutorService pool = Executors.newFixedThreadPool(NUM_OF_THREADS);
 
-        port = (args.length > 0) ? Integer.valueOf(args[0]) : 10333;
+        port = (args.length > 0) ? Integer.valueOf(args[0]) : 9090;
         resultPath = (args.length > 0) ? args[1] : null;
 
         ServerSocket listener = new ServerSocket(port);
