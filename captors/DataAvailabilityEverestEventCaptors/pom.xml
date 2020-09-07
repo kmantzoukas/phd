@@ -118,7 +118,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.8</version>
                 <executions>
-                    <execution>
+                    <!--<execution>
                         <id>scp-to-remote</id>
                         <phase>package</phase>
                         <goals>
@@ -131,7 +131,7 @@
                                     keyfile="${keyfile.path}"
                                     trust="true" passphrase="">
                                 </scp>
-                                <!--
+                                &lt;!&ndash;
                                 <scp localFile="${project.basedir}/src/main/resources/bus.properties"
                                      remoteToFile="${remote.username}@10.207.1.102:/home/${remote.username}/${event.captors.config.dir}" verbose="true"
                                      keyfile="${keyfile.path}"
@@ -142,13 +142,13 @@
                                      keyfile="${keyfile.path}"
                                      trust="true" passphrase="">
                                 </scp>
-                                -->
+                                &ndash;&gt;
                                 <scp localFile="${project.basedir}/target/${agent.jar.name}"
                                      remoteToFile="${remote.username}@10.207.1.104:/home/${remote.username}/${event.captors.dir}" verbose="true"
                                      keyfile="${keyfile.path}"
                                      trust="true" passphrase="">
                                 </scp>
-                                <!--
+                                &lt;!&ndash;
                                 <scp localFile="${project.basedir}/src/main/resources/bus.properties"
                                      remoteToFile="${remote.username}@10.207.1.104:/home/${remote.username}/${event.captors.config.dir}" verbose="true"
                                      keyfile="${keyfile.path}"
@@ -159,13 +159,13 @@
                                      keyfile="${keyfile.path}"
                                      trust="true" passphrase="">
                                 </scp>
-                                -->
+                                &ndash;&gt;
                                 <scp localFile="${project.basedir}/target/${agent.jar.name}"
                                      remoteToFile="${remote.username}@10.207.1.105:/home/${remote.username}/${event.captors.dir}" verbose="true"
                                      keyfile="${keyfile.path}"
                                      trust="true" passphrase="">
                                 </scp>
-                                <!--
+                                &lt;!&ndash;
                                 <scp localFile="${project.basedir}/src/main/resources/bus.properties"
                                      remoteToFile="${remote.username}@10.207.1.105:/home/${remote.username}/${event.captors.config.dir}" verbose="true"
                                      keyfile="${keyfile.path}"
@@ -176,10 +176,10 @@
                                      keyfile="${keyfile.path}"
                                      trust="true" passphrase="">
                                 </scp>
-                                -->
+                                &ndash;&gt;
                             </target>
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
                 <dependencies>
                     <dependency>
