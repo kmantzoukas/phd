@@ -11,7 +11,7 @@
 
 	<properties>
 		<jdk.version>1.8</jdk.version>
-		<spring.version>4.1.0.RELEASE</spring.version>
+		<spring.version>5.2.22.RELEASE</spring.version>
 		<spring.data.jpa.version>1.8.2.RELEASE</spring.data.jpa.version>
 		<spring.security.web>4.1.0.RELEASE</spring.security.web>
         <spring.security.config>4.1.0.RELEASE</spring.security.config>
