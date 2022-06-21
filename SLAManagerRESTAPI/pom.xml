@@ -19,7 +19,7 @@
 		<jackson.version>2.4.0</jackson.version>
 		<jaxb-api.version>2.2.11</jaxb-api.version>
 		<commons-logging.version>1.2</commons-logging.version>
-		<mysql.version>5.1.36</mysql.version>
+		<mysql.version>8.0.28</mysql.version>
 		<jsonpath.version>1.2.0</jsonpath.version>
 		<querydsl.version>3.3.2</querydsl.version>
 		<skipTests>true</skipTests>
