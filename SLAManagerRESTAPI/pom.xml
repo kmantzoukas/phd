@@ -15,7 +15,7 @@
 		<spring.data.jpa.version>1.8.2.RELEASE</spring.data.jpa.version>
 		<spring.security.web>4.1.0.RELEASE</spring.security.web>
         <spring.security.config>4.1.0.RELEASE</spring.security.config>
-		<hibernate.version>4.3.5.Final</hibernate.version>
+		<hibernate.version>5.3.20.Final</hibernate.version>
 		<jackson.version>2.4.0</jackson.version>
 		<jaxb-api.version>2.2.11</jaxb-api.version>
 		<commons-logging.version>1.2</commons-logging.version>
